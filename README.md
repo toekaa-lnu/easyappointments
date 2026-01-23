@@ -1,93 +1,111 @@
-# easyappointments_fork
+<h1 align="center">
+    <br>
+    <a href="https://easyappointments.org">
+        <img src="https://raw.githubusercontent.com/alextselegidis/easyappointments/develop/logo.png" alt="Easy!Appointments" width="150">
+    </a>
+    <br>
+    Easy!Appointments
+    <br>
+</h1>
 
+<br>
 
+<h4 align="center">
+    A powerful Open Source Appointment Scheduler that can be installed on your server. 
+</h4>
 
-## Getting started
+<p align="center">
+  <img alt="GitHub" src="https://img.shields.io/github/license/alextselegidis/easyappointments?style=for-the-badge">
+  <img alt="GitHub release (latest by date)" src="https://img.shields.io/github/v/release/alextselegidis/easyappointments?style=for-the-badge">
+  <img alt="GitHub All Releases" src="https://img.shields.io/github/downloads/alextselegidis/easyappointments/total?style=for-the-badge">
+  <a href="https://discord.com/invite/UeeSkaw">
+    <img alt="Chat On Discord" src="https://img.shields.io/badge/chat-on%20discord-7289da?style=for-the-badge&logo=discord&logoColor=white">
+  </a>
+</p>
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+<p align="center">
+  <a href="#about">About</a> •
+  <a href="#features">Features</a> •
+  <a href="#setup">Setup</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#license">License</a>
+</p>
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+![screenshot](screenshot.png)
 
-## Add your files
+## About
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+**Easy!Appointments** is a highly customizable web application that allows customers to book appointments with you 
+via a sophisticated web interface. Moreover, it provides the ability to sync your data with Google Calendar so you can 
+use them with other services. It is an open source project that you can download and install **even for commercial use**. 
+Easy!Appointments will run smoothly with your existing website as it can be installed in a single folder of the 
+server and of course share an existing database.
 
+## Features
+
+The application is designed to be flexible enough so that it can handle any enterprise work flow. 
+
+* Customers and appointments management.
+* Services and providers organization.
+* Working plan and booking rules.
+* Google Calendar synchronization.
+* Email notifications system.
+* Self hosted installation.
+* Translated user interface.
+* User community support. 
+
+## Setup
+
+To clone and run this application, you'll need [Git](https://git-scm.com), [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) and [Composer](https://getcomposer.org) installed on your computer. From your command line:
+
+```bash
+# Clone this repository
+$ git clone https://github.com/alextselegidis/easyappointments.git
+
+# Go into the repository
+$ cd easyappointments
+
+# Install dependencies
+$ npm install && composer install
+
+# Start the file watcher
+$ npm start
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/lnu-ub/easyappointments_fork.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
-* [Set up project integrations](https://gitlab.com/lnu-ub/easyappointments_fork/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You can build the files by running `npm run build`. This command will bundle everything to a `build` directory.
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+You will need to perform the following steps to install the application on your server:
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+* Make sure that your server has Apache/Nginx, PHP (8.2+) and MySQL installed.
+* Create a new database (or use an existing one).
+* Copy the "easyappointments" source folder on your server.
+* Make sure that the "storage" directory is writable.
+* Rename the "config-sample.php" file to "config.php" and update its contents based on your environment.
+* Open the browser on the Easy!Appointments URL and follow the installation guide.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+That's it! You can now use Easy!Appointments at your will.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+You will find the latest release at [easyappointments.org](https://easyappointments.org).
+If you have problems installing or configuring the application visit the
+[official support group](https://groups.google.com/forum/#!forum/easy-appointments).
+You can also report problems on the [issues page](https://github.com/alextselegidis/easyappointments/issues)
+and help the development progress.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## License 
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Code Licensed Under [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) | Content Under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+---
 
-## License
-For open source projects, say how it is licensed.
+Website [alextselegidis.com](https://alextselegidis.com) &nbsp;&middot;&nbsp;
+GitHub [alextselegidis](https://github.com/alextselegidis) &nbsp;&middot;&nbsp;
+Twitter [@alextselegidis](https://twitter.com/AlexTselegidis)
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+###### More Projects On Github
+###### ⇾ [Plainpad &middot; Self Hosted Note Taking App](https://github.com/alextselegidis/plainpad)
+###### ⇾ [Questionful &middot; Web Questionnaires Made Easy](https://github.com/alextselegidis/questionful)
+###### ⇾ [Integravy &middot; Service Orchestration At Your Fingertips](https://github.com/alextselegidis/integravy)
