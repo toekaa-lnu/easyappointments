@@ -82,9 +82,9 @@
 
                 <?php slot('info_first_column'); ?>
 
-                <?php component('custom_fields'); ?>
+                <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'customer']); ?>
 
-                <?php slot('after_custom_fields'); ?>
+                <?php slot('after_customer_custom_fields'); ?>
             </div>
 
             <div class="col-12 col-md-6 field-col mx-auto">
@@ -138,6 +138,10 @@
                 <?php endif; ?>
 
                 <?php slot('info_second_column'); ?>
+
+                <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'appointment']); ?>
+
+                <?php slot('after_appointment_custom_fields'); ?>
             </div>
 
         </div>

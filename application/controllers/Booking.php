@@ -35,11 +35,6 @@ class Booking extends EA_Controller
         'zip_code',
         'timezone',
         'language',
-        'custom_field_1',
-        'custom_field_2',
-        'custom_field_3',
-        'custom_field_4',
-        'custom_field_5',
     ];
     public mixed $allowed_provider_fields = ['id', 'first_name', 'last_name', 'services', 'timezone'];
     public array $allowed_appointment_fields = [
@@ -62,6 +57,15 @@ class Booking extends EA_Controller
     public function __construct()
     {
         parent::__construct();
+
+        for ($i = 1; $i <= config('max_custom_fields', 5); $i++) {
+            array_push($this->allowed_customer_fields, 'custom_field_' . $i);
+        }
+
+        for ($i = 1; $i <= config('max_appt_custom_fields', 5); $i++) {
+            array_push($this->allowed_appointment_fields, 'appt_custom_field_' . $i);
+        }
+
 
         $this->load->model('appointments_model');
         $this->load->model('providers_model');

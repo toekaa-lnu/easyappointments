@@ -12,6 +12,8 @@
  * @var array $timezone
  * @var string $appointment_link
  */
+$max_custom_fields = config('max_custom_fields', 5);
+$max_appt_custom_fields = config('max_appt_custom_fields');
 ?>
 
 <html lang="en">
@@ -127,6 +129,25 @@
                     </td>
                 </tr>
             <?php endif; ?>
+
+            <?php for ($i = 1; $i <= $max_appt_custom_fields; $i++): ?>
+            <?php if (isset($appointment['appt_custom_field_' . $i])): ?>
+            <?php $label_data = setting('label_appt_custom_field_' . $i, 'appt_custom_field') ?>
+            <?php preg_match('/^(.+)(\s*{.+})*$/U', $label_data, $matches) ?>
+            <?php $label_text = sizeof($matches) > 1 ? e(lang($matches[1])) : e(lang($label)) ?>
+            <?php $value_text = empty($appointment['appt_custom_field_' . $i]) ? e(lang('no_field_value')) : e(lang($appointment['appt_custom_field_' . $i])) ?>
+            <?php $value_text = e(implode('; ', array_map(fn($string): string => lang($string), explode(';', $value_text)))) ?>
+            <tr>
+                <td class="label" style="padding: 3px;font-weight: bold;">
+                    <?= $label_text ?>
+                </td>
+                <td style="padding: 3px;">
+                    <?= $value_text ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <?php endfor; ?>
+
         </table>
 
         <h2>
@@ -166,6 +187,25 @@
                     <?= e($customer['address']) ?>
                 </td>
             </tr>
+
+            <?php for ($i = 1; $i <= $max_custom_fields; $i++): ?>
+            <?php if (isset($customer['custom_field_' . $i])): ?>
+            <?php $label_data = setting('label_custom_field_' . $i, 'custom_field') ?>
+            <?php preg_match('/^(.+)(\s*{.+})*$/U', $label_data, $matches) ?>
+            <?php $label_text = sizeof($matches) > 1 ? e(lang($matches[1])) : e(lang($label)) ?>
+            <?php $value_text = empty($customer['custom_field_' . $i]) ? e(lang('no_field_value')) : lang($customer['custom_field_' . $i]) ?>
+            <?php $value_text = e(implode('; ', array_map(fn($string): string => lang($string), explode(';', $value_text)))) ?>
+            <tr>
+                <td class="label" style="padding: 3px;font-weight: bold;">
+                    <?= $label_text ?>
+                </td>
+                <td style="padding: 3px;">
+                    <?= $value_text ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+            <?php endfor; ?>
+
         </table>
 
         <h2>

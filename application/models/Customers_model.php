@@ -43,14 +43,20 @@ class Customers_model extends EA_Model
         'zip' => 'zip_code',
         'timezone' => 'timezone',
         'language' => 'language',
-        'customField1' => 'custom_field_1',
-        'customField2' => 'custom_field_2',
-        'customField3' => 'custom_field_3',
-        'customField4' => 'custom_field_4',
-        'customField5' => 'custom_field_5',
         'notes' => 'notes',
         'ldapDn' => 'ldap_dn',
     ];
+    
+    /**
+     * Customers_model constructor.
+     * Configurable number of custom fields added dynamically.
+     */
+    function __construct() {
+        parent::__construct();
+        for ($i = 1; $i <= config('max_custom_fields', 5); $i++) {
+            $this->api_resource['customField' . $i] = 'custom_field_' . $i;
+        }
+    }
 
     /**
      * Save (insert or update) a customer.
@@ -458,13 +464,12 @@ class Customers_model extends EA_Model
             'notes' => $customer['notes'],
             'timezone' => $customer['timezone'],
             'language' => $customer['language'],
-            'customField1' => $customer['custom_field_1'],
-            'customField2' => $customer['custom_field_2'],
-            'customField3' => $customer['custom_field_3'],
-            'customField4' => $customer['custom_field_4'],
-            'customField5' => $customer['custom_field_5'],
             'ldapDn' => $customer['ldap_dn'],
         ];
+
+        for ($i = 1; $i <= config('max_custom_fields', 5); $i++) {
+            $encoded_resource['customField' . $i] = $customer['custom_field_' . $i];
+        }
 
         $customer = $encoded_resource;
     }
@@ -517,6 +522,12 @@ class Customers_model extends EA_Model
 
         if (array_key_exists('timezone', $customer)) {
             $decoded_resource['timezone'] = $customer['timezone'];
+        }
+
+        for ($i = 1; $i <= config('max_custom_fields', 5); $i++) {
+            if (array_key_exists('customField_' . $i, $customer)) {
+                $decoded_resource['custom_field_' . $i] = $customer['customField' . $i];
+            }
         }
 
         if (array_key_exists('customField1', $customer)) {

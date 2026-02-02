@@ -196,6 +196,10 @@
                                 </div>
 
                                 <?php slot('after_primary_appointment_fields'); ?>
+
+                                <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'appointment']); ?>
+
+                                <?php slot('after_appointment_custom_fields'); ?>
                             </div>
                         </div>
                     </fieldset>
@@ -292,9 +296,6 @@
                                     </select>
                                 </div>
 
-                                <?php component('custom_fields'); ?>
-
-                                <?php slot('after_primary_customer_custom_fields'); ?>
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="mb-3">
@@ -352,6 +353,10 @@
                                 </div>
 
                                 <?php slot('after_primary_customer_fields'); ?>
+                                
+                                <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'customer']); ?>
+
+                                <?php slot('after_customer_custom_fields'); ?>
                             </div>
                         </div>
                     </fieldset>

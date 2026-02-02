@@ -357,6 +357,21 @@ body {
         padding: 5px;
         margin: 5px 0;
     }
+
+    #book-appointment-wizard .form-input-group {
+        border: 1px solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        padding: 0.6rem 1rem;
+    }
+    #book-appointment-wizard .form-input.is-invalid + .form-input-group {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23d9534f'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23d9534f' stroke='none'/%3e%3c/svg%3e");
+        background-position: top calc(0.3125em + 0.3rem) right calc(0.3125em + 0.3rem);
+        background-repeat: no-repeat;
+        background-size: calc(0.625em + 0.6rem) calc(0.625em + 0.6rem);
+        border: 1px solid var(--bs-form-invalid-border-color);
+        border-radius: var(--bs-border-radius);
+        padding: 0.6rem 1rem;
+    }
 }
 
 /* BOOK SUCCESS & MESSAGE

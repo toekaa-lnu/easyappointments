@@ -194,9 +194,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php component('custom_fields', [
-                        'disabled' => true,
-                    ]); ?>
+                    <?php component('custom_fields', ['disabled' => true, 'fieldset' => 'customer' ]); ?>
 
                     <div class="mb-3">
                         <label class="form-label" for="notes">

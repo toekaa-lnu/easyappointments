@@ -33,11 +33,6 @@ class Customers extends EA_Controller
         'notes',
         'timezone',
         'language',
-        'custom_field_1',
-        'custom_field_2',
-        'custom_field_3',
-        'custom_field_4',
-        'custom_field_5',
         'ldap_dn',
     ];
 
@@ -51,6 +46,10 @@ class Customers extends EA_Controller
     public function __construct()
     {
         parent::__construct();
+
+        for ($i = 1; $i <= config('max_custom_fields', 5); $i++) {
+            array_push($this->allowed_customer_fields, 'custom_field_' . $i);
+        }
 
         $this->load->model('appointments_model');
         $this->load->model('customers_model');

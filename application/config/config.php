@@ -475,5 +475,14 @@ $config['proxy_ips'] = '';
 */
 $config['rate_limiting'] = TRUE;
 
+/*
+|--------------------------------------------------------------------------
+| Additional configuration by toekaa-lnu
+|--------------------------------------------------------------------------
+*/
+$config['max_custom_fields'] = defined('Config::MAX_CUSTOM_FIELDS') ? Config::MAX_CUSTOM_FIELDS : 5;
+$config['max_appt_custom_fields'] = defined('Config::MAX_APPOINTMENT_CUSTOM_FIELDS') ? Config::MAX_APPOINTMENT_CUSTOM_FIELDS : 5;
+
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

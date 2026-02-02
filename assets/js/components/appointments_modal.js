@@ -46,11 +46,8 @@ App.Components.AppointmentsModal = (function () {
     const $insertAppointment = $('#insert-appointment');
     const $existingCustomersList = $('#existing-customers-list');
     const $newCustomer = $('#new-customer');
-    const $customField1 = $('#custom-field-1');
-    const $customField2 = $('#custom-field-2');
-    const $customField3 = $('#custom-field-3');
-    const $customField4 = $('#custom-field-4');
-    const $customField5 = $('#custom-field-5');
+    const $maxCustomFields = $(".custom-field-container").length;
+    const $maxApptCustomFields = $(".appt-custom-field-container").length;
 
     const moment = window.moment;
 
@@ -66,6 +63,45 @@ App.Components.AppointmentsModal = (function () {
 
         if (provider && provider.timezone) {
             $('.provider-timezone').text(vars('timezones')[provider.timezone]);
+        }
+    }
+
+    /**
+     * Function for joining all checked inputs in a custom field group to a common hidden input 
+     */
+    function joinCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = [];
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (elem.checked) {
+                    groupInputValues.push(elem.value);
+                }
+            });
+            joinedInputElem.value = groupInputValues.join(';');
+        }
+    }
+
+    /**
+     * Function for splitting all custom field group values into a single value 
+     */
+    function splitCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = joinedInputElem.value.split(';');
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (groupInputValues.includes(elem.value)) {
+                    elem.checked = true;
+                } else {
+                    elem.checked = false;
+                }
+            });
         }
     }
 
@@ -110,6 +146,10 @@ App.Components.AppointmentsModal = (function () {
                 appointment.id = $appointmentId.val();
             }
 
+            for (let i = 1; i <= $maxApptCustomFields; i++) {
+                appointment[`appt_custom_field_${i}`] = $(`#appt-custom-field-${i}`).val();
+            }
+
             const customer = {
                 first_name: $firstName.val(),
                 last_name: $lastName.val(),
@@ -121,12 +161,11 @@ App.Components.AppointmentsModal = (function () {
                 language: $language.val(),
                 timezone: $timezone.val(),
                 notes: $customerNotes.val(),
-                custom_field_1: $customField1.val(),
-                custom_field_2: $customField2.val(),
-                custom_field_3: $customField3.val(),
-                custom_field_4: $customField4.val(),
-                custom_field_5: $customField5.val(),
             };
+
+            for (let i = 1; i <= $maxCustomFields; i++) {
+                customer[`custom_field_${i}`] = $(`#custom-field-${i}`).val();
+            }
 
             if ($customerId.val() !== '') {
                 // Set the id value, only if we are editing an appointment.
@@ -265,11 +304,16 @@ App.Components.AppointmentsModal = (function () {
                 $language.val(customer.language);
                 $timezone.val(customer.timezone);
                 $customerNotes.val(customer.notes);
-                $customField1.val(customer.custom_field_1);
-                $customField2.val(customer.custom_field_2);
-                $customField3.val(customer.custom_field_3);
-                $customField4.val(customer.custom_field_4);
-                $customField5.val(customer.custom_field_5);
+
+                for (let i = 1; i <= $maxCustomFields; i++) {
+                    $(`#custom-field-${i}`).val(customer[`custom_field_${i}`]);
+                }
+                const customFields = document.getElementsByClassName('custom-field-container');
+                if (customFields.length > 0) {
+                    Array.from(customFields).forEach(container => {
+                        splitCustomFieldGroupValues(container);
+                    });
+                }
             }
 
             $selectCustomer.trigger('click'); // Hide the list.
@@ -426,12 +470,16 @@ App.Components.AppointmentsModal = (function () {
             $zipCode.val('');
             $language.val(vars('default_language'));
             $timezone.val(vars('default_timezone'));
-            $customerNotes.val('');
-            $customField1.val('');
-            $customField2.val('');
-            $customField3.val('');
-            $customField4.val('');
-            $customField5.val('');
+            
+            for (let i = 1; i <= $maxCustomFields; i++) {
+                $(`#custom-field-${i}`).val('');
+            }
+            const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                    splitCustomFieldGroupValues(container);
+                });
+            }
         });
     }
 
@@ -443,7 +491,8 @@ App.Components.AppointmentsModal = (function () {
      */
     function resetModal() {
         // Empty form fields.
-        $appointmentsModal.find('input, textarea').val('');
+        $appointmentsModal.find('textarea, select, input :not(.form-input-group)').val('');
+        $appointmentsModal.find('.form-input-group input').prop('checked', false);
         $appointmentsModal.find('.modal-message').addClass('.d-none');
         $appointmentsModal.find('.is-invalid').removeClass('is-invalid');
 
@@ -512,7 +561,7 @@ App.Components.AppointmentsModal = (function () {
         App.Utils.UI.initializeDateTimePicker($endDatetime);
         App.Utils.UI.setDateTimePickerValue($endDatetime, endDatetime);
         $appointmentsModal.find('.modal-message').removeClass('alert-danger').text('').addClass('d-none');
-    }
+   }
 
     /**
      * Validate the manage appointment dialog data.
@@ -529,6 +578,21 @@ App.Components.AppointmentsModal = (function () {
         try {
             // Check required fields.
             let missingRequiredField = false;
+
+            // Join custom field group values
+            const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+            if (apptCustomFields.length > 0) {
+                Array.from(apptCustomFields).forEach(container => {
+                    joinCustomFieldGroupValues(container);
+                });
+            }
+            const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                    joinCustomFieldGroupValues(container);
+                });
+            }
+
 
             $appointmentsModal.find('.required').each((index, requiredField) => {
                 if ($(requiredField).val() === '' || $(requiredField).val() === null) {

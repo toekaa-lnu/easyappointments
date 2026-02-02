@@ -2,6 +2,11 @@
 
 <?php section('content'); ?>
 
+<?php
+$max_custom_fields = config('max_custom_fields', 5);
+$max_appt_custom_fields = config('max_appt_custom_fields', 5);
+?>
+
 <div id="booking-settings-page" class="container backend-page">
     <div id="booking-settings">
         <div class="row">
@@ -251,7 +256,7 @@
                         </h5>
 
                         <div class="row mb-5 fields-row">
-                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                            <?php for ($i = 1; $i <= $max_custom_fields; $i++): ?>
                                 <div class="col-sm-6">
                                     <div class="form-group mb-5">
                                         <label for="first-name" class="form-label">
@@ -280,6 +285,48 @@
                                                        id="require-custom-field-<?= $i ?>"
                                                        data-field="require_custom_field_<?= $i ?>">
                                                 <label class="form-check-label" for="require-custom-field-<?= $i ?>">
+                                                    <?= lang('require') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+
+                        <h5 class="text-black-50 mb-3 fw-light">
+                            <?= lang('appt_custom_fields') ?>
+                        </h5>
+                        <div class="row mb-5 fields-row">
+                            <?php for ($i = 1; $i <= $max_appt_custom_fields; $i++): ?>
+                                <div class="col-sm-6">
+                                    <div class="form-group mb-5">
+                                        <label for="appt-custom-field-<?= $i ?>" class="form-label">
+                                            <?= lang('appt_custom_field') ?> #<?= $i ?>
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <input type="text" id="appt-custom-field-<?= $i ?>" class="form-control mb-2"
+                                               placeholder="<?= lang('label') ?>"
+                                               data-field="label_appt_custom_field_<?= $i ?>"
+                                               aria-label="label"
+                                        />
+
+                                        <div class="d-flex">
+                                            <div class="form-check form-switch me-4">
+                                                <input class="form-check-input display-switch" type="checkbox"
+                                                       id="display-appt-custom-field-<?= $i ?>"
+                                                       data-field="display_appt_custom_field_<?= $i ?>">
+                                                <label class="form-check-label" for="display-appt-custom-field-<?= $i ?>">
+                                                    <?= lang('display') ?>
+                                                </label>
+                                            </div>
+
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input require-switch" type="checkbox"
+                                                       id="require-appt-custom-field-<?= $i ?>"
+                                                       data-field="require_appt_custom_field_<?= $i ?>">
+                                                <label class="form-check-label" for="require-appt-custom-field-<?= $i ?>">
                                                     <?= lang('require') ?>
                                                 </label>
                                             </div>

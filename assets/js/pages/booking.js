@@ -33,11 +33,8 @@ App.Pages.Booking = (function () {
     const $availableHours = $('#available-hours');
     const $bookAppointmentSubmit = $('#book-appointment-submit');
     const $deletePersonalInformation = $('#delete-personal-information');
-    const $customField1 = $('#custom-field-1');
-    const $customField2 = $('#custom-field-2');
-    const $customField3 = $('#custom-field-3');
-    const $customField4 = $('#custom-field-4');
-    const $customField5 = $('#custom-field-5');
+    const $maxCustomFields = $(".custom-field-container").length;
+    const $maxApptCustomFields = $(".appt-custom-field-container").length;
     const $displayBookingSelection = $('.display-booking-selection');
     const tippy = window.tippy;
     const moment = window.moment;
@@ -59,6 +56,45 @@ App.Pages.Booking = (function () {
      */
     function detectDatepickerMonthChangeStep(previousDateTimeMoment, nextDateTimeMoment) {
         return previousDateTimeMoment.isAfter(nextDateTimeMoment) ? -1 : 1;
+    }
+
+    /**
+     * Function for joining all checked inputs in a custom field group to a common hidden input 
+     */
+    function joinCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = [];
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (elem.checked) {
+                    groupInputValues.push(elem.value);
+                }
+            });
+            joinedInputElem.value = groupInputValues.join(';');
+        }
+    }
+
+    /**
+     * Function for splitting all custom field group values into a single value 
+     */
+    function splitCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = joinedInputElem.value.split(';');
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (groupInputValues.includes(elem.value)) {
+                    elem.checked = true;
+                } else {
+                    elem.checked = false;
+                }
+            });
+        }
     }
 
     /**
@@ -625,6 +661,20 @@ App.Pages.Booking = (function () {
         $('#wizard-frame-3 .is-invalid').removeClass('is-invalid');
         $('#wizard-frame-3 label.text-danger').removeClass('text-danger');
 
+        // Join custom field group values
+        const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+        if (apptCustomFields.length > 0) {
+            Array.from(apptCustomFields).forEach(container => {
+                joinCustomFieldGroupValues(container);
+            });
+        }
+        const customFields = document.getElementsByClassName('custom-field-container');
+        if (customFields.length > 0) {
+            Array.from(customFields).forEach(container => {
+                joinCustomFieldGroupValues(container);
+            });
+        }
+
         // Validate required fields.
         let missingRequiredField = false;
 
@@ -706,7 +756,7 @@ App.Pages.Booking = (function () {
 
         const timezoneOptionText = $selectTimezone.find('option:selected').text();
 
-        $('#appointment-details').html(`
+        let htmlAppointmentDetails = `
             <div>
                 <div class="mb-2 fw-bold fs-3">
                     ${serviceOptionText}
@@ -731,7 +781,24 @@ App.Pages.Booking = (function () {
                     ${Number(service.price).toFixed(2)} ${service.currency}
                 </div>
             </div>     
-        `);
+        `;
+
+        // Appointment custom fields
+        const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+        if (apptCustomFields.length > 0) {
+            Array.from(apptCustomFields).forEach(container => {
+                const label = container.querySelector('.form-label').childNodes[0].textContent.trim();
+                let value = container.querySelector(`.form-input`).value;
+                value = value ? value.split(';').map(string => lang(string)).join('; ') : lang('no_field_value');
+                htmlAppointmentDetails += `
+                <div class="mb-2">
+                    <b>${label}:</b> ${value}
+                </div>
+                `;
+            });
+        }
+
+        $('#appointment-details').html('<div>' + htmlAppointmentDetails) + '</div>';
 
         // Render the customer information
 
@@ -754,7 +821,7 @@ App.Pages.Booking = (function () {
             addressParts.push(zipCode);
         }
 
-        $('#customer-details').html(`
+        let htmlCustomerDetails = `
             <div>
                 <div class="mb-2 fw-bold fs-3">
                     ${lang('contact_info')}
@@ -775,7 +842,25 @@ App.Pages.Booking = (function () {
                     ${addressParts.join(', ')}
                 </div>
             </div>
-        `);
+        `;
+
+        // User custom fields
+        const customFields = document.getElementsByClassName('custom-field-container');
+        if (customFields.length > 0) {
+            Array.from(customFields).forEach(container => {
+                const label = container.querySelector('.form-label').childNodes[0].textContent.trim();
+                let value = container.querySelector(`.form-input`).value;
+                value = value ? value.split(';').map(string => lang(string)).join('; ') : lang('no_field_value');
+                htmlCustomerDetails += `
+                <div class="mb-2">
+                    <b>${label}:</b> ${value}
+                </div>
+                `;
+            });
+        }
+
+        $('#customer-details').html(htmlCustomerDetails);
+
 
         // Update appointment form data for submission to server when the user confirms the appointment.
 
@@ -790,12 +875,12 @@ App.Pages.Booking = (function () {
             city: $city.val(),
             zip_code: $zipCode.val(),
             timezone: $selectTimezone.val(),
-            custom_field_1: $customField1.val(),
-            custom_field_2: $customField2.val(),
-            custom_field_3: $customField3.val(),
-            custom_field_4: $customField4.val(),
-            custom_field_5: $customField5.val(),
         };
+
+        for (let i = 1; i <= $maxCustomFields; i++) {
+            data.customer[`custom_field_${i}`] = $(`#custom-field-${i}`).val();
+        }
+
 
         data.appointment = {
             start_datetime:
@@ -809,6 +894,10 @@ App.Pages.Booking = (function () {
             id_users_provider: $selectProvider.val(),
             id_services: $selectService.val(),
         };
+
+        for (let i = 1; i <= $maxApptCustomFields; i++) {
+            data.appointment[`appt_custom_field_${i}`] = $(`#appt-custom-field-${i}`).val();
+        }
 
         data.manage_mode = Number(manageMode);
 
@@ -874,6 +963,17 @@ App.Pages.Booking = (function () {
             App.Utils.UI.setDateTimePickerValue($selectDate, startMoment.toDate());
             App.Http.Booking.getAvailableHours(startMoment.format('YYYY-MM-DD'));
 
+            for (let i = 1; i <= $maxApptCustomFields; i++) {
+                $(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])
+            }
+            // Split custom field group values
+            const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+            if (apptCustomFields.length > 0) {
+                Array.from(apptCustomFields).forEach(container => {
+                    splitCustomFieldGroupValues(container);
+                });
+            }
+
             // Update unavailable dates while in manage mode
 
             App.Http.Booking.getUnavailableDates(
@@ -896,12 +996,16 @@ App.Pages.Booking = (function () {
             const appointmentNotes = appointment.notes !== null ? appointment.notes : '';
             $notes.val(appointmentNotes);
 
-            $customField1.val(customer.custom_field_1);
-            $customField2.val(customer.custom_field_2);
-            $customField3.val(customer.custom_field_3);
-            $customField4.val(customer.custom_field_4);
-            $customField5.val(customer.custom_field_5);
-
+            for (let i = 1; i <= $maxCustomFields; i++) {
+                $(`#custom-field-${i}`).val(customer[`custom_field_${i}`])
+            }
+            const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                    splitCustomFieldGroupValues(container);
+                });
+            }
+            
             App.Pages.Booking.updateConfirmFrame();
 
             return true;

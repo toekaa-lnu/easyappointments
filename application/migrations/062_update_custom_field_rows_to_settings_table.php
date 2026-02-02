@@ -11,8 +11,11 @@
  * @since       v1.4.0
  * ---------------------------------------------------------------------------- */
 
-class Migration_Insert_custom_field_rows_to_settings_table extends EA_Migration
+class Migration_Update_custom_field_rows_to_settings_table extends EA_Migration
 {
+    /**
+     * @var int
+     */
     private const SETTINGS = [
         'display' => '0',
         'require' => '0',
@@ -47,7 +50,7 @@ class Migration_Insert_custom_field_rows_to_settings_table extends EA_Migration
     public function down(): void
     {
         $max_custom_fields = config('max_custom_fields', 5);
-        for ($i = 1; $i <= $max_custom_fields; $i++) {
+        for ($i = 1; $i >= $max_custom_fields; $i++) {
             $field_name = 'custom_field_' . $i;
 
             foreach (self::SETTINGS as $name => $default_value) {

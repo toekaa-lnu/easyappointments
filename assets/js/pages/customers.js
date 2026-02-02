@@ -28,11 +28,7 @@ App.Pages.Customers = (function () {
     const $timezone = $('#timezone');
     const $language = $('#language');
     const $ldapDn = $('#ldap-dn');
-    const $customField1 = $('#custom-field-1');
-    const $customField2 = $('#custom-field-2');
-    const $customField3 = $('#custom-field-3');
-    const $customField4 = $('#custom-field-4');
-    const $customField5 = $('#custom-field-5');
+    const $maxCustomFields = $(".custom-field-container").length;
     const $notes = $('#notes');
     const $formMessage = $('#form-message');
     const $customerAppointments = $('#customer-appointments');
@@ -41,6 +37,45 @@ App.Pages.Customers = (function () {
 
     let filterResults = {};
     let filterLimit = 20;
+
+    /**
+     * Function for joining all checked inputs in a custom field group to a common hidden input 
+     */
+    function joinCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = [];
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (elem.checked) {
+                    groupInputValues.push(elem.value);
+                }
+            });
+            joinedInputElem.value = groupInputValues.join(';');
+        }
+    }
+
+    /**
+     * Function for splitting all custom field group values into a single value 
+     */
+    function splitCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = joinedInputElem.value.split(';');
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (groupInputValues.includes(elem.value)) {
+                    elem.checked = true;
+                } else {
+                    elem.checked = false;
+                }
+            });
+        }
+    }
 
     /**
      * Add the page event listeners.
@@ -134,13 +169,18 @@ App.Pages.Customers = (function () {
                 notes: $notes.val(),
                 timezone: $timezone.val(),
                 language: $language.val() || 'english',
-                custom_field_1: $customField1.val(),
-                custom_field_2: $customField2.val(),
-                custom_field_3: $customField3.val(),
-                custom_field_4: $customField4.val(),
-                custom_field_5: $customField5.val(),
                 ldap_dn: $ldapDn.val(),
             };
+
+            for (let i = 1; i <= $maxCustomFields; i++) {
+                customer[`custom_field_${i}`] = $(`#custom-field-${i}`).val();
+            }
+            const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                    joinCustomFieldGroupValues(container);
+                });
+            }
 
             if ($id.val()) {
                 customer.id = $id.val();
@@ -254,7 +294,9 @@ App.Pages.Customers = (function () {
      * Bring the customer form back to its initial state.
      */
     function resetForm() {
-        $customers.find('.record-details').find('input, select, textarea').val('').prop('disabled', true);
+        $customers.find('.record-details').find('input, select, textarea').prop('disabled', true);
+        $customers.find('.record-details').find('textarea, select, input :not(.form-input-group)').val('');
+        $customers.find('.record-details').find('.form-input-group input').prop('checked', false);
         $customers.find('.record-details .form-label span').prop('hidden', true);
         $customers.find('.record-details #timezone').val(vars('default_timezone'));
         $customers.find('.record-details #language').val(vars('default_language'));
@@ -291,11 +333,18 @@ App.Pages.Customers = (function () {
         $timezone.val(customer.timezone);
         $language.val(customer.language || 'english');
         $ldapDn.val(customer.ldap_dn);
-        $customField1.val(customer.custom_field_1);
-        $customField2.val(customer.custom_field_2);
-        $customField3.val(customer.custom_field_3);
-        $customField4.val(customer.custom_field_4);
-        $customField5.val(customer.custom_field_5);
+
+        for (let i = 1; i <= $maxCustomFields; i++) {
+            const elem = $(`#custom-field-${i}`);
+            const value = customer[`custom_field_${i}`];
+            elem.val(value);
+        }
+        const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                splitCustomFieldGroupValues(container);
+            });
+        }
 
         $customerAppointments.empty();
 

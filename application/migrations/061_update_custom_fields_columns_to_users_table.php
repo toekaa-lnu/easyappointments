@@ -11,7 +11,7 @@
  * @since       v1.4.0
  * ---------------------------------------------------------------------------- */
 
-class Migration_Add_custom_fields_columns_to_users_table extends EA_Migration
+class Migration_Update_custom_fields_columns_to_users_table extends EA_Migration
 {
     /**
      * Upgrade method.

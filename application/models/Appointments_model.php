@@ -50,6 +50,17 @@ class Appointments_model extends EA_Model
     ];
 
     /**
+     * Appointments_model constructor.
+     * Configurable number of appointment custom fields added dynamically.
+     */
+    function __construct() {
+        parent::__construct();
+        for ($i = 1; $i <= config('max_appt_custom_fields', 5); $i++) {
+            $this->api_resource['apptCustomField' . $i] = 'appt_custom_field_' . $i;
+        }
+    }
+
+    /**
      * Save (insert or update) an appointment.
      *
      * @param array $appointment Associative array with the appointment data.

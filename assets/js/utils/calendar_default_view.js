@@ -31,10 +31,32 @@ App.Utils.CalendarDefaultView = (function () {
     const FILTER_TYPE_PROVIDER = 'provider';
     const FILTER_TYPE_SERVICE = 'service';
     const moment = window.moment;
+    const $maxCustomFields = $appointmentsModal.find(".custom-field-container").length;
+    const $maxApptCustomFields = $appointmentsModal.find(".appt-custom-field-container").length;
 
     let $popoverTarget;
     let fullCalendar = null;
     let lastFocusedEventData; // Contains event data for later use.
+
+    /**
+     * Function for splitting all custom field group values into a single value 
+     */
+    function splitCustomFieldGroupValues(customFieldContainer) {
+        const inputGroupElem = customFieldContainer.querySelector('.form-input-group');
+        if (inputGroupElem) {
+            const joinedInputElem = customFieldContainer.querySelector('.form-input[type="hidden"');
+            const id = joinedInputElem.id;
+            let groupInputValues = joinedInputElem.value.split(';');
+            const groupInputElems = inputGroupElem.querySelectorAll(`input[name=${id}]`);
+            groupInputElems.forEach(elem => {
+                if (groupInputValues.includes(elem.value)) {
+                    elem.checked = true;
+                } else {
+                    elem.checked = false;
+                }
+            });
+        }
+    }
 
     /**
      * Add the utility event listeners.
@@ -163,11 +185,26 @@ App.Utils.CalendarDefaultView = (function () {
                 $appointmentsModal.find('#appointment-status').val(appointment.status);
                 $appointmentsModal.find('#appointment-notes').val(appointment.notes);
                 $appointmentsModal.find('#customer-notes').val(customer.notes);
-                $appointmentsModal.find('#custom-field-1').val(customer.custom_field_1);
-                $appointmentsModal.find('#custom-field-2').val(customer.custom_field_2);
-                $appointmentsModal.find('#custom-field-3').val(customer.custom_field_3);
-                $appointmentsModal.find('#custom-field-4').val(customer.custom_field_4);
-                $appointmentsModal.find('#custom-field-5').val(customer.custom_field_5);
+
+                for (let i = 1; i <= $maxApptCustomFields; i++) {
+                    $appointmentsModal.find(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])
+                }
+                const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+                if (apptCustomFields.length > 0) {
+                    Array.from(apptCustomFields).forEach(container => {
+                        splitCustomFieldGroupValues(container);
+                    });
+                }
+
+                for (let i = 1; i <= $maxCustomFields; i++) {
+                    $appointmentsModal.find(`#custom-field-${i}`).val(customer[`custom_field_${i}`])
+                }
+                const customFields = document.getElementsByClassName('custom-field-container');
+                if (customFields.length > 0) {
+                    Array.from(customFields).forEach(container => {
+                        splitCustomFieldGroupValues(container);
+                    });
+                }
 
                 App.Components.ColorSelection.setColor(
                     $appointmentsModal.find('#appointment-color'),
@@ -1626,11 +1663,26 @@ App.Utils.CalendarDefaultView = (function () {
             $appointmentsModal.find('#appointment-status').val(appointment.status);
             $appointmentsModal.find('#appointment-notes').val(appointment.notes);
             $appointmentsModal.find('#customer-notes').val(customer.notes);
-            $appointmentsModal.find('#custom-field-1').val(customer.custom_field_1);
-            $appointmentsModal.find('#custom-field-2').val(customer.custom_field_2);
-            $appointmentsModal.find('#custom-field-3').val(customer.custom_field_3);
-            $appointmentsModal.find('#custom-field-4').val(customer.custom_field_4);
-            $appointmentsModal.find('#custom-field-5').val(customer.custom_field_5);
+
+            for (let i = 1; i <= $maxApptCustomFields; i++) {
+                $appointmentsModal.find(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])
+            }
+            const apptCustomFields = document.getElementsByClassName('appt-custom-field-container');
+            if (apptCustomFields.length > 0) {
+                Array.from(apptCustomFields).forEach(container => {
+                    splitCustomFieldGroupValues(container);
+                });
+            }
+
+            for (let i = 1; i <= $maxCustomFields; i++) {
+                $appointmentsModal.find(`#custom-field-${i}`).val(customer[`custom_field_${i}`])
+            }
+            const customFields = document.getElementsByClassName('custom-field-container');
+            if (customFields.length > 0) {
+                Array.from(customFields).forEach(container => {
+                    splitCustomFieldGroupValues(container);
+                });
+            }
 
             App.Components.ColorSelection.setColor($appointmentsModal.find('#appointment-color'), appointment.color);
 
