@@ -32,8 +32,8 @@ After merging the commit to your build, you need to migrate the database to the 
 
     Define `MAX_CUSTOM_FIELDS` and `MAX_APPOINTMENT_CUSTOM_FIELDS` to the max number of customer-specific and appointment-specific custom fields that you may want to have in your booking form. Define these values in the `config.php` file in the root folder.
     ```
+     const MAX_CUSTOM_FIELDS = 5;
      const MAX_APPOINTMENT_CUSTOM_FIELDS = 5;
-     const MAX_ATTACHED_FILES = 5;
     ```
     These values are just maximum limits, you don't need to have them all active at the same time. But if you want more than the standard 5, set these to something higher. If you don't define these values at all, the standard 5 is used for both.
 
@@ -103,9 +103,9 @@ These custom fields are customer-specific, and stored in the `ea_users` table in
 Since the existing custom fields are updated every time the same user makes a booking, there is sometimes a need for appointment-specific custom fields. These are stored in the `ea_appointments` table in the Easy!Appointments database, so they are unique for each booking. This makes it possible to add fields such as *number of participants* or *appointment notes*.
 
 Like the customer-specific custom fields, the max number of appointment-specific custom fields is also configurable in the `config.php` file (in the root folder).
-
+```
   const MAX_APPOINTMENT_CUSTOM_FIELDS = 5;
-
+```
 Make sure you change this **before** running the migration command to update the database. See [Configuration and Migration](#configuration-and-migration) for more info.
 
 The new appointment-specific custom fields will appear in the *Admin > Settings > Booking Settings* UI, with the same functionality as the existing custom fields.
