@@ -217,6 +217,18 @@ class Appointments extends EA_Controller
 
             $appointment = $this->appointments_model->find($appointment_id);
 
+            // Delete files attached to the appointment
+            $file_names = $appointment['attached_files'];
+            if ($file_names && strlen($file_names) > 0) {
+                $file_array = explode(';', $file_names);
+                foreach ($file_array as $file_name) {
+                    $file_path = 'storage/uploads/' . $file_name;
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
+                }
+            }
+
             $this->appointments_model->delete($appointment_id);
 
             $this->webhooks_client->trigger(WEBHOOK_APPOINTMENT_DELETE, $appointment);

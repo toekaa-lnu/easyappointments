@@ -23,6 +23,7 @@ App.Http.Booking = (function () {
     const $availableHours = $('#available-hours');
     const $captchaHint = $('#captcha-hint');
     const $captchaTitle = $('.captcha-title');
+    const $maxAttachedFiles = $(".attached-file-name-row").length;
 
     const MONTH_SEARCH_LIMIT = 2; // Months in the future
 
@@ -165,19 +166,24 @@ App.Http.Booking = (function () {
             }
         }
 
-        const formData = JSON.parse($('input[name="post_data"]').val());
+        var formData = new FormData();
+        var postData = $('input[name="post_data"]').val();
+        formData.append('post_data', postData);
+        formData.append('csrfToken', vars('csrf_token'));
 
-        const data = {
-            csrf_token: vars('csrf_token'),
-            post_data: formData,
-        };
+        for (var i = 1; i <= $maxAttachedFiles; i++) {
+            var fileData = $(`input[id="attached-file-input-${i}"]`)[0].files[0];
+            if (fileData) {
+                formData.append(`attached_file_data_${i}`, fileData);
+            }
+        }
 
         if ($captchaText.length > 0) {
-            data.captcha = $captchaText.val();
+            formData.append('captcha', $captchaText.val());
         }
 
         if (vars('manage_mode')) {
-            data.exclude_appointment_id = vars('appointment_data').id;
+            formData.append('exclude_appointment_id', vars('appointment_data').id);
         }
 
         const url = App.Utils.Url.siteUrl('booking/register');
@@ -187,8 +193,9 @@ App.Http.Booking = (function () {
         $.ajax({
             url: url,
             method: 'post',
-            data: data,
-            dataType: 'json',
+            data: formData,
+            contentType: false,
+            processData: false,
             beforeSend: () => {
                 $layer.appendTo('body').css({
                     background: 'white',

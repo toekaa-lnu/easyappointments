@@ -185,7 +185,10 @@ App.Utils.CalendarDefaultView = (function () {
                 $appointmentsModal.find('#appointment-status').val(appointment.status);
                 $appointmentsModal.find('#appointment-notes').val(appointment.notes);
                 $appointmentsModal.find('#customer-notes').val(customer.notes);
+                $appointmentsModal.find('#existing-file-names').val(appointment.attached_files);
 
+                App.Components.AppointmentsModal.initializeAttachedFiles();
+                
                 for (let i = 1; i <= $maxApptCustomFields; i++) {
                     $appointmentsModal.find(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])
                 }
@@ -1663,6 +1666,9 @@ App.Utils.CalendarDefaultView = (function () {
             $appointmentsModal.find('#appointment-status').val(appointment.status);
             $appointmentsModal.find('#appointment-notes').val(appointment.notes);
             $appointmentsModal.find('#customer-notes').val(customer.notes);
+            $appointmentsModal.find('#existing-file-names').val(appointment.attached_files);
+
+            App.Components.AppointmentsModal.initializeAttachedFiles();
 
             for (let i = 1; i <= $maxApptCustomFields; i++) {
                 $appointmentsModal.find(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])

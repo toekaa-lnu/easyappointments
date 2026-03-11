@@ -515,3 +515,59 @@ body .clearfix {
 .cc-window {
     z-index: 999 !important;
 }
+
+#attach-file-button {
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.discard-file-button {
+    cursor: pointer;
+    margin-left: 10px;
+    margin-bottom: -3px;
+}
+
+.subsettings {
+    margin-top: 0.8rem;
+    margin-left: 2rem;
+    font-size: 0.875rem;
+}
+.subsettings.disabled {
+    opacity: 0.25 !important;
+}
+.subsettings .form-group {
+    margin-bottom: 0.3rem;
+}
+.subsettings .form-control {
+    width: 30%;
+    padding: 0 0.5rem 0 0.5rem !important;
+}
+.subsettings label {
+    width: 70%;
+    line-height: 2.4rem;
+}
+/*
+.subsettings div {
+    margin-top: 4px;
+}
+.subsettings div input {
+    width: 30%;
+}
+.subsettings div input:disabled {
+    color:#ccc !important;
+}
+.subsettings div select {
+    width: 30%;
+    display:inline-block !important;
+    padding: 0 0 0 4px !important;
+    line-height: 1.5 !important;
+    border: 1px solid #8f8f9d !important;
+    border-radius: 0;
+    background-position: right 0.3rem center !important;
+}
+.subsettings div select:disabled {
+    background-blend-mode:lighten;
+    color:#ccc !important;
+    border: 1px solid #ccc !important;
+}
+*/

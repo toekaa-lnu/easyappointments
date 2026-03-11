@@ -48,6 +48,13 @@ App.Components.AppointmentsModal = (function () {
     const $newCustomer = $('#new-customer');
     const $maxCustomFields = $(".custom-field-container").length;
     const $maxApptCustomFields = $(".appt-custom-field-container").length;
+    const $maxAttachedFiles = $(".attached-file-name-row").length;
+    const $attachedFilenames = $('#attached-file-names');
+    const $existingFilenames = $('#existing-file-names');
+    const $discardedFilenames = $('#discarded-file-names');
+    const $attachFileButton = $('#attach-file-button');
+    const $attachedFileInputs = $('.attached-file-input');
+    const $existingFileNameRows = $('.existing-file-name-row');
 
     const moment = window.moment;
 
@@ -150,6 +157,16 @@ App.Components.AppointmentsModal = (function () {
                 appointment[`appt_custom_field_${i}`] = $(`#appt-custom-field-${i}`).val();
             }
 
+            appointment.attached_files = $attachedFilenames.val();
+            let attachedFiles = [];
+            const discardedFilenames = $discardedFilenames.val();
+            for (var i = 1; i <= $maxAttachedFiles; i++) {
+                var attachedFile = $(`input[id="attached-file-input-${i}"]`)[0].files[0];
+                if (attachedFile) {
+                    attachedFiles.push(attachedFile);
+                }
+            }
+            
             const customer = {
                 first_name: $firstName.val(),
                 last_name: $lastName.val(),
@@ -192,7 +209,7 @@ App.Components.AppointmentsModal = (function () {
             };
 
             // Save appointment data.
-            App.Http.Calendar.saveAppointment(appointment, customer, successCallback, errorCallback);
+            App.Http.Calendar.saveAppointment(appointment, customer, attachedFiles, discardedFilenames, successCallback, errorCallback);
         });
 
         /**
@@ -481,6 +498,119 @@ App.Components.AppointmentsModal = (function () {
                 });
             }
         });
+
+        /*
+        * Event: Attach file button "Click"
+        *
+        * Generates a click in the first input element
+        * that has no file attached yet
+        */
+        $attachFileButton.on('click', () => {
+            for (let i = 1; i <= $maxAttachedFiles; i++) {
+                const fileInput = $(`#attached-file-input-${i}`);
+                const hasAttachedFile = (fileInput[0].files.length > 0);
+                if (!hasAttachedFile) {
+                    $(`#attached-file-input-${i}`)[0].click();
+                    return;
+                }
+            }
+        });
+
+        /*
+        * Event: Attached file(s) input "Change"
+        *
+        * Note: all attach file input elements share the same function
+        * Specific element is identified by its "file-index" attribute
+        */
+        $attachedFileInputs.on('change', (event) => {
+            let inputElem = event.target;
+            let filename = inputElem.files.length > 0 ? inputElem.files[0].name : '';
+            let file_index = inputElem.attributes["file-index"].value;
+            const filenameElem = $(`#attached-file-name-${file_index}`);
+            const filenameRowElem = $(`#attached-file-name-row-${file_index}`);
+            filenameElem.text(filename);
+            filename != '' ? filenameRowElem.show() : filenameRowElem.hide();
+            let attachedFiles = [];
+            $(`.attached-file-input`).each(function () {
+                if (this.files.length > 0) {
+                    attachedFiles.push(this.files[0].name);
+                }
+            });
+            $attachedFilenames.val(attachedFiles.join(';'));
+            toggleFileAttachButton();
+        });
+
+        /*
+        * Event: Attached file(s) "Change"
+        * Called when one of the existing (already uploaded) files is discarded
+        * Note: all attach file input elements share the same function
+        * Specific element is identified by its "file-index" attribute
+        */
+        $existingFileNameRows.on('change', (event) => {
+            const discardedFiles = $discardedFilenames.val() && $discardedFilenames.val().length > 0 ? $discardedFilenames.val().split(';') : [];
+            const inputElem = event.target;
+            const uniqueFilename = inputElem.getAttribute('unique-filename');
+            discardedFiles.push(uniqueFilename);
+            inputElem.style.display='none';
+            inputElem.removeAttribute('filename');
+            inputElem.removeAttribute('unique-filename');
+            $discardedFilenames.val(discardedFiles.join(';'));
+            toggleFileAttachButton();
+        });
+    }
+
+    /**
+     * Disable/enable 'File attach' button
+     * Depending on current number of attached and existing files
+     * compared with max number of files
+     */
+    function toggleFileAttachButton() {
+        let file_count = 0;
+        for (let i = 1; i <= $maxAttachedFiles; i++) {
+            const existingFileRow = $(`#existing-file-name-row-${i}`);
+            const attachedfileInput = $(`#attached-file-input-${i}`);
+            const existingFile = existingFileRow[0].hasAttribute('unique-filename');
+            const attachedFile = (attachedfileInput[0].files.length > 0);
+            file_count += (existingFile ? 1 : 0) + (attachedFile ? 1 : 0);
+        }
+        $attachFileButton.prop('disabled', file_count >= $maxAttachedFiles);
+    }
+
+    /**
+     * Initialize attached files
+     * Take into account appointment may already have existing files attached
+     */
+    function initializeAttachedFiles() {
+        existingFiles = $existingFilenames.val() && $existingFilenames.val().length > 0 ? $existingFilenames.val().split(';') : [];
+        $discardedFilenames.val('');
+        $attachedFilenames.val('');
+        $attachedFileInputs.val(null);
+
+        const existingFilesCount = existingFiles.length;
+        for (let i = 1; i <= $maxAttachedFiles; i++) {
+            const elemRow = $(`#existing-file-name-row-${i}`);
+            const elem = $(`#existing-file-name-${i}`);
+            if (i <= existingFilesCount) {
+                const uniqueFilename = existingFiles[i-1];
+                if (uniqueFilename) {
+                    const urlFilename = App.Utils.Url.baseUrl(`storage/uploads/${encodeURIComponent(uniqueFilename)}`);
+                    const origFilename = uniqueFilename.match(/^(?:[0-9]{5,}-)?(.+)/)[1];
+                    elem[0].innerHTML=`<a href="${urlFilename}">${origFilename}</a>`;
+                    elemRow[0].setAttribute('unique-filename', uniqueFilename);
+                    elemRow[0].setAttribute('filename', origFilename);
+                    elemRow.show();
+                }
+            } else {
+                elemRow.hide();
+                elemRow[0].removeAttribute('unique-filename');
+                elemRow[0].removeAttribute('filename');
+            }
+        }
+        for (let i = 1; i <= $maxAttachedFiles; i++) {
+            const elemRow = $(`#attached-file-name-row-${i}`);
+            elemRow.hide();
+        }
+        toggleFileAttachButton();
     }
 
     /**
@@ -495,6 +625,9 @@ App.Components.AppointmentsModal = (function () {
         $appointmentsModal.find('.form-input-group input').prop('checked', false);
         $appointmentsModal.find('.modal-message').addClass('.d-none');
         $appointmentsModal.find('.is-invalid').removeClass('is-invalid');
+
+        $existingFilenames.val('');
+        initializeAttachedFiles();
 
         const defaultStatusValue = $appointmentStatus.find('option:first').val();
         $appointmentStatus.val(defaultStatusValue);
@@ -647,5 +780,6 @@ App.Components.AppointmentsModal = (function () {
     return {
         resetModal,
         validateAppointmentForm,
+        initializeAttachedFiles
     };
 })();

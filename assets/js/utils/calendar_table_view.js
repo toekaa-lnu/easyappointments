@@ -35,6 +35,7 @@ App.Utils.CalendarTableView = (function () {
     let $popoverTarget;
     const $maxCustomFields = $appointmentsModal.find(".custom-field-container").length;
     const $maxApptCustomFields = $appointmentsModal.find(".appt-custom-field-container").length;
+    const $maxAttachedFiles = $appointmentsModal.find(".attached-file-name-row").length;
 
     const moment = window.moment;
     let lastFocusedEventData;
@@ -259,6 +260,9 @@ App.Utils.CalendarTableView = (function () {
                 $appointmentsModal.find('#appointment-status').val(appointment.status);
                 $appointmentsModal.find('#appointment-notes').val(appointment.notes);
                 $appointmentsModal.find('#customer-notes').val(customer.notes);
+                $appointmentsModal.find('#existing-file-names').val(appointment.attached_files);
+
+                App.Components.AppointmentsModal.initializeAttachedFiles();
 
                 for (let i = 1; i <= $maxApptCustomFields; i++) {
                     $appointmentsModal.find(`#appt-custom-field-${i}`).val(appointment[`appt_custom_field_${i}`])
@@ -269,6 +273,17 @@ App.Utils.CalendarTableView = (function () {
                         splitCustomFieldGroupValues(container);
                     });
                 }
+
+                // const fileNames = appointment.attached_files.split(';');
+                // for (let i = 1; i <= $maxAttachedFiles; i++) {
+                //     const uniqueFileName = fileNames[i-1];
+                //     const encodedFileName = uniqueFileName ? encodeURIComponent(uniqueFileName) : null;
+                //     const cleanFileName = uniqueFileName.match(/^[1-9]{5,}-(.+)/)[1];
+                //     const elem = $appointmentsModal.find(`#attached-file-name-${i}`);
+                //     const elemRow = $appointmentsModal.find(`#attached-file-name-row-${i}`);
+                //     elem[0].innerHTML=`<a href="storage/uploads/${encodedFileName}">${cleanFileName}</a>`;
+                //     uniqueFileName ? elemRow.show() : elemRow.hide();
+                // }
 
                 for (let i = 1; i <= $maxCustomFields; i++) {
                     $appointmentsModal.find(`#custom-field-${i}`).val(customer[`custom_field_${i}`])

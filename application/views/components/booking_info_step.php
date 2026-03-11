@@ -140,6 +140,7 @@
                 <?php slot('info_second_column'); ?>
 
                 <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'appointment']); ?>
+                <?php component('attached_files', ['disabled' => false]); ?>
 
                 <?php slot('after_appointment_custom_fields'); ?>
             </div>
