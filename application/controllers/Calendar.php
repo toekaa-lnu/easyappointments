@@ -51,6 +51,7 @@ class Calendar extends EA_Controller
         'id_users_provider',
         'id_users_customer',
         'id_services',
+        'attached_files'
     ];
 
     public array $optional_appointment_fields = [
@@ -229,9 +230,12 @@ class Calendar extends EA_Controller
     public function save_appointment(): void
     {
         try {
-            $customer_data = request('customer_data');
-
-            $appointment_data = request('appointment_data');
+            if (isset($_POST['post_data'])) {
+                $post_data = json_decode($_POST['post_data'], true);
+                $appointment_data = $post_data['appointment_data'];
+                $customer_data = $post_data['customer_data'];
+                $discarded_file_names = isset($post_data['discarded_file_names']) ? $post_data['discarded_file_names'] : '';
+            }
 
             $this->check_event_permissions((int) $appointment_data['id_users_provider']);
 
@@ -277,6 +281,37 @@ class Calendar extends EA_Controller
                 if ($manage_mode && !empty($appointment['id'])) {
                     $this->synchronization->remove_appointment_on_provider_change($appointment['id']);
                 }
+
+                // Update the filenames attribute in appointment, upload the files to storage/uploads/
+                $attached_files = [];
+                if ($manage_mode) {
+                    $existing_appointment = $this->appointments_model->get(['id' => $appointment['id']])[0];
+                    $existing_file_names = $existing_appointment['attached_files'];
+                    $existing_files = strlen($existing_file_names) == 0 ? [] :explode(';', $existing_file_names);
+                    $discarded_files = strlen($discarded_file_names) == 0 ? [] : explode(';', $discarded_file_names);
+                    foreach($discarded_files as $discarded_file) {
+                        if (strlen($discarded_file) > 0) {
+                            $index = array_search($discarded_file, $existing_files);
+                            if ($index !== false) {
+                                unset($existing_files[$index]);
+                            }
+                            $discarded_file_path = sprintf('storage/uploads/%s', $discarded_file);
+                            if (file_exists($discarded_file_path)) {
+                                $delete_result = unlink($discarded_file_path);
+                            }
+                        }
+                    }
+                    $attached_files = $existing_files;
+                }
+                $max_attached_files = setting('max_attached_files');
+                for ($i = 1; $i <= $max_attached_files; $i++) {
+                    $file_name =  $this->upload_attached_file('attached_file_data_' . $i);
+                    if ($file_name) {
+                        array_push($attached_files, $file_name);
+                    }
+                }
+
+                $appointment['attached_files'] = implode(';', $attached_files);
 
                 $this->appointments_model->only($appointment, $this->allowed_appointment_fields);
 
@@ -388,6 +423,18 @@ class Calendar extends EA_Controller
 
             // Delete appointment record from the database.
             $this->appointments_model->delete($appointment_id);
+
+            // Delete files attached to the appointment
+            $file_names = $appointment['attached_files'];
+            if ($file_names && strlen($file_names) > 0) {
+                $file_array = explode(';', $file_names);
+                foreach ($file_array as $file_name) {
+                    $file_path = 'storage/uploads/' . $file_name;
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
+                }
+            }
 
             $this->notifications->notify_appointment_deleted(
                 $appointment,
@@ -809,4 +856,96 @@ class Calendar extends EA_Controller
             json_exception($e);
         }
     }
+
+    /*
+     * Upload attached file
+     *
+     * This method will upload the attached file given a file ID.
+     * File will be stored in storage/uploads/ folder
+     * 
+     * @param int $file_id The attached file id.
+     *
+     * @return string Returns a unique filename for the attached file.
+     */
+    protected function upload_attached_file($file_id)
+    {
+        $file_origname = null;
+        $file_finalname = null;
+        if (isset($_FILES[$file_id])) {
+            if (!isset($_FILES[$file_id]['error']) || is_array($_FILES[$file_id]['error'])) {
+                throw new RuntimeException(lang('invalid_parameters'));
+            }
+            switch ($_FILES[$file_id]['error']) {
+                case UPLOAD_ERR_OK:
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    throw new RuntimeException(lang('no_file_found'));
+                    break;
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    throw new RuntimeException(lang('system_file_size_exceeded'));
+                    break;
+                default:
+                    throw new RuntimeException(lang('unknown_error'));
+            }
+
+            $file_origname = $_FILES[$file_id]['name'];
+            $file_tmpname = $_FILES[$file_id]['tmp_name'];
+            $file_size = $_FILES[$file_id]['size'];
+            $file_giventype = $_FILES[$file_id]['type'];
+
+            $file_rand = strval(rand(10000, 99999));
+
+            // Check allowed file types from settings
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $file_mimetype = $finfo->file($file_tmpname);
+            $allowed_filetypes = explode(",", setting('attached_files_allowed_types'));
+            $mimetypes = get_mimes();
+            $allowed_mimetypes = [];
+
+            foreach ($allowed_filetypes as $filetype) {
+                $trimmed_filetype = trim($filetype,". ");
+                if (array_key_exists($trimmed_filetype, $mimetypes)) {
+                    // Allowed type is extension --> add all related mime types
+                    if (is_array($mimetypes[$trimmed_filetype])) {
+                        $allowed_mimetypes = array_merge($allowed_mimetypes, $mimetypes[$trimmed_filetype]);
+                    } else {
+                        $allowed_mimetypes[] = $mimetypes[$trimmed_filetype];
+                    }
+                } else if (array_search($trimmed_filetype, $mimetypes)) {
+                    // Allowed type is mime type --> add it as it is
+                    $allowed_mimetypes[] = $mimetypes[$trimmed_filetype];
+                }
+            }
+
+            $file_extn = array_search($file_mimetype, $allowed_mimetypes, true);
+            if (false === $file_extn) {
+                $error_message = sprintf(lang('attached_files_invalid_format'), lang('attached_files_user_allowed_types_hint'));
+                throw new RuntimeException($error_message);
+            }
+        
+            $max_size = setting('attached_files_max_size');
+            if ($file_size > $max_size) {
+                if ((int)($max_size / 10000000000) > 0) {
+                    $max_size_text = sprintf(lang('gigabytes'), (int)($max_size / 10000000000));
+                } else if ((int)($max_size / 10000000) > 0) {
+                    $max_size_text = sprintf(lang('megabytes'), (int)($max_size / 10000000));
+                } else if ((int)($max_size / 1000) > 0) {
+                    $max_size_text = sprintf(lang('kilobytes'), (int)($max_size / 1000));
+                } else {
+                    $max_size_text = sprintf(lang('bytes'), (int)$max_size);
+                }
+                $error_message = sprintf(lang('file_max_size_exceeded'), $max_size_text);
+                throw new RuntimeException($error_message);
+            }
+
+            $file_finalname = sprintf('%s-%s', $file_rand, $file_origname);
+            $file_finalpath = sprintf('storage/uploads/%s', $file_finalname);
+            if (!move_uploaded_file($file_tmpname, $file_finalpath)) {
+                throw new RuntimeException(lang('failed_to_move_file'));
+            }
+        }
+        return $file_finalname;
+    }
+
 }

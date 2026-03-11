@@ -47,6 +47,7 @@ class Appointments_model extends EA_Model
         'customerId' => 'id_users_customer',
         'googleCalendarId' => 'id_google_calendar',
         'caldavCalendarId' => 'id_caldav_calendar',
+        'attachedFiles' => 'attached_files',
     ];
 
     /**
@@ -586,6 +587,7 @@ class Appointments_model extends EA_Model
                 $appointment['id_google_calendar'] !== null ? $appointment['id_google_calendar'] : null,
             'caldavCalendarId' =>
                 $appointment['id_caldav_calendar'] !== null ? $appointment['id_caldav_calendar'] : null,
+            'attachedFiles' => $appointment['attached_files'] !== null ? $appointment['attached_files'] : null,
         ];
 
         $appointment = $encoded_resource;
@@ -651,6 +653,10 @@ class Appointments_model extends EA_Model
 
         if (array_key_exists('caldavCalendarId', $appointment)) {
             $decoded_request['id_caldav_calendar'] = $appointment['caldavCalendarId'];
+        }
+
+        if (array_key_exists('attachedFiles', $appointment)) {
+            $decoded_request['attached_files'] = $appointment['attached_files'];
         }
 
         $decoded_request['is_unavailability'] = false;

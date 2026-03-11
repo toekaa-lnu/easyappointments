@@ -17,6 +17,7 @@
  * Old Name: BackendCalendarApi
  */
 App.Http.Calendar = (function () {
+    const $maxAttachedFiles = $(".attached-file-name-row").length;
     /**
      * Save Appointment
      *
@@ -30,19 +31,33 @@ App.Http.Calendar = (function () {
      *
      * @return {*|jQuery}
      */
-    function saveAppointment(appointment, customer, successCallback, errorCallback) {
-        const url = App.Utils.Url.siteUrl('calendar/save_appointment');
 
-        const data = {
-            csrf_token: vars('csrf_token'),
+    function saveAppointment(appointment, customer, attachedFiles, discardedFilenames, successCallback, errorCallback) {
+
+        var formData = new FormData();
+
+        const postData = {
             appointment_data: appointment,
+            customer_data: customer,
+            discarded_file_names: discardedFilenames,
         };
 
-        if (customer) {
-            data.customer_data = customer;
-        }
+        formData.append('post_data', JSON.stringify(postData));
+        formData.append('csrf_token', vars('csrf_token'));
 
-        return $.post(url, data)
+        attachedFiles.forEach((attachedFile, index) => {
+            formData.append(`attached_file_data_${index+1}`, attachedFile);
+        });
+
+        const url = App.Utils.Url.siteUrl('calendar/save_appointment');
+
+        return $.ajax({
+                url: url,
+                method: 'post',
+                data: formData,
+                contentType: false,
+                processData: false,
+            })
             .done((response) => {
                 if (successCallback) {
                     successCallback(response);

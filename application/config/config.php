@@ -482,7 +482,10 @@ $config['rate_limiting'] = TRUE;
 */
 $config['max_custom_fields'] = defined('Config::MAX_CUSTOM_FIELDS') ? Config::MAX_CUSTOM_FIELDS : 5;
 $config['max_appt_custom_fields'] = defined('Config::MAX_APPOINTMENT_CUSTOM_FIELDS') ? Config::MAX_APPOINTMENT_CUSTOM_FIELDS : 5;
-
+$config['max_attached_files'] = defined('Config::MAX_ATTACHED_FILES') ? Config::MAX_ATTACHED_FILES : 0;
+$config['attached_files_max_size'] = defined('Config::ATTACHED_FILES_MAX_SIZE') ? Config::ATTACHED_FILES_MAX_SIZE : 8000000;
+$config['attached_files_allowed_types'] = defined('Config::ATTACHED_FILES_ALLOWED_TYPES') ? Config::ATTACHED_FILES_ALLOWED_TYPES : '.doc,.docx,application/msword';
+$config['attached_files_allowed_types_hint'] = defined('Config::ATTACHED_FILES_ALLOWED_TYPES_HINT') ? Config::ATTACHED_FILES_ALLOWED_TYPES_HINT : 'attached_files_user_allowed_types_hint';
 
 /* End of file config.php */
 /* Location: ./application/config/config.php */

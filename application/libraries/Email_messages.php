@@ -96,6 +96,19 @@ class Email_messages
             $appointment['end_datetime'] = $appointment_end->format('Y-m-d H:i:s');
         }
 
+        // Convert back to original filenames (without unique random number in the beginning)
+        $original_filenames = [];
+        if (isset($appointment['attached_files']) && !empty($appointment['attached_files'])) {
+            $file_names = explode(';', $appointment['attached_files']);
+            foreach ($file_names as $file_name) {
+                preg_match('/^[0-9]{5,}-(.+)/', $file_name, $matches);
+                if (sizeof($matches) > 1) {
+                    $original_filenames[] = $matches[1];
+                }
+            }
+        }
+        $appointment['original_filenames'] = implode('; ', $original_filenames);
+
         $html = $this->CI->load->view(
             'emails/appointment_saved_email',
             [
@@ -160,6 +173,19 @@ class Email_messages
             $appointment_end->setTimezone($custom_timezone);
             $appointment['end_datetime'] = $appointment_end->format('Y-m-d H:i:s');
         }
+
+        // Convert back to original filenames (without unique random number in the beginning)
+        $original_filenames = [];
+        if (isset($appointment['attached_files']) && !empty($appointment['attached_files'])) {
+            $file_names = explode(';', $appointment['attached_files']);
+            foreach ($file_names as $file_name) {
+                preg_match('/^[0-9]{5,}-(.+)/', $file_name, $matches);
+                if (sizeof($matches) > 1) {
+                    $original_filenames[] = $matches[1];
+                }
+            }
+        }
+        $appointment['original_filenames'] = implode(', ', $original_filenames);
 
         $html = $this->CI->load->view(
             'emails/appointment_deleted_email',

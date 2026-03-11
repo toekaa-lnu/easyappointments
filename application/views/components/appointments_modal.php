@@ -26,7 +26,7 @@
             <div class="modal-body">
                 <div class="modal-message alert d-none"></div>
 
-                <form>
+                <form enctype="multipart/form-data">
                     <fieldset>
                         <h5 class="text-black-50 mb-3 fw-light"><?= lang('appointment_details_title') ?></h5>
 
@@ -198,6 +198,7 @@
                                 <?php slot('after_primary_appointment_fields'); ?>
 
                                 <?php component('custom_fields', ['disabled' => false, 'fieldset' => 'appointment']); ?>
+                                <?php component('attached_files', ['disabled' => false]); ?>
 
                                 <?php slot('after_appointment_custom_fields'); ?>
                             </div>

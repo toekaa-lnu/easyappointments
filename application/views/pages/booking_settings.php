@@ -344,6 +344,53 @@ $max_appt_custom_fields = config('max_appt_custom_fields', 5);
                         <div class="row">
                             <div class="col-12">
                                 <div class="border rounded mb-3 p-3">
+
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="attached-files-supported"
+                                                   data-field="attached_files_supported">
+                                            <label class="form-check-label" for="attached-files-supported">
+                                                <?= lang('attached_files_supported') ?>
+                                            </label>
+                                        </div>
+                                        <div class="subsettings fields-row">
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="number" id="max-attached-files"
+                                                    data-field="max_attached_files"
+                                                    min="1" max="<?= config('max_attached_files') ?>">
+                                                <label class="form-check-label col-7" for="max-attached-files">
+                                                    <?= lang('max_attached_files') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="attached-files-max_size"
+                                                    data-field="attached_files_max_size">
+                                                <label class="form-check-label col-7" for="attached-files-max_size">
+                                                    <?= lang('attached_files_admin_max_size') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="attached-files-allowed-types"
+                                                    data-field="attached_files_allowed_types">
+                                                <label class="form-check-label col-7" for="attached-files-allowed-types">
+                                                    <?= lang('attached_files_admin_allowed_types') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="attached-files-allowed-types-hint"
+                                                    data-field="attached_files_allowed_types_hint">
+                                                <label class="form-check-label col-7" for="attached-files-allowed-types-hint">
+                                                    <?= lang('attached_files_admin_allowed_types_hint') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-text text-muted">
+                                            <small>
+                                                <?= lang('attached_files_admin_hint') ?>
+                                            </small>
+                                        </div>
+                                    </div>
+
                                     <div class="mb-3">
                                         <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="customer-notifications"
