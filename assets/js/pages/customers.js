@@ -294,9 +294,7 @@ App.Pages.Customers = (function () {
      * Bring the customer form back to its initial state.
      */
     function resetForm() {
-        $customers.find('.record-details').find('input, select, textarea').prop('disabled', true);
-        $customers.find('.record-details').find('textarea, select, input :not(.form-input-group)').val('');
-        $customers.find('.record-details').find('.form-input-group input').prop('checked', false);
+        $customers.find('.record-details').find('input, select, textarea').val('').prop('disabled', true);
         $customers.find('.record-details .form-label span').prop('hidden', true);
         $customers.find('.record-details #timezone').val(vars('default_timezone'));
         $customers.find('.record-details #language').val(vars('default_language'));

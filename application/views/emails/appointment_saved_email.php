@@ -13,7 +13,7 @@
  * @var string $appointment_link
  */
 $max_custom_fields = config('max_custom_fields', 5);
-$max_appt_custom_fields = config('max_appt_custom_fields');
+$max_appt_custom_fields = config('max_appt_custom_fields', 5);
 $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? setting('max_attached_files', 0) : 0;
 ?>
 
@@ -132,7 +132,7 @@ $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? set
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $max_appt_custom_fields; $i++): ?>
-            <?php if (isset($appointment['appt_custom_field_' . $i])): ?>
+            <?php if ((intval(setting('display_appt_custom_field_' . $i)) == 1) && isset($appointment['appt_custom_field_' . $i])): ?>
             <?php $label_data = setting('label_appt_custom_field_' . $i, 'appt_custom_field') ?>
             <?php preg_match('/^(.+)(\s*{.+})*$/U', $label_data, $matches) ?>
             <?php $label_text = sizeof($matches) > 1 ? e(lang($matches[1])) : e(lang($label)) ?>
@@ -201,7 +201,7 @@ $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? set
             </tr>
 
             <?php for ($i = 1; $i <= $max_custom_fields; $i++): ?>
-            <?php if (isset($customer['custom_field_' . $i])): ?>
+            <?php if ((intval(setting('display_custom_field_' . $i)) == 1) && isset($customer['custom_field_' . $i])): ?>
             <?php $label_data = setting('label_custom_field_' . $i, 'custom_field') ?>
             <?php preg_match('/^(.+)(\s*{.+})*$/U', $label_data, $matches) ?>
             <?php $label_text = sizeof($matches) > 1 ? e(lang($matches[1])) : e(lang($label)) ?>

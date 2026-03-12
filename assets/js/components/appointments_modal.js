@@ -621,8 +621,10 @@ App.Components.AppointmentsModal = (function () {
      */
     function resetModal() {
         // Empty form fields.
-        $appointmentsModal.find('textarea, select, input :not(.form-input-group)').val('');
-        $appointmentsModal.find('.form-input-group input').prop('checked', false);
+        $appointmentsModal.find('textarea').val('');
+        $appointmentsModal.find('select').val('');
+        $appointmentsModal.find('input:not([type="checkbox"]):not([type="radio"])').val('');
+        $appointmentsModal.find('input:where([type="checkbox"],[type="radio"])').prop('checked', false);
         $appointmentsModal.find('.modal-message').addClass('.d-none');
         $appointmentsModal.find('.is-invalid').removeClass('is-invalid');
 
