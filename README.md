@@ -64,17 +64,21 @@ php index.php console migrate
 > php index.php console migrate up
 > ```
 >
-> [!CAUTION]
-> Unfortunately migrating up/down doesn't tell you which step you are on (unless you try to migrate past the last step), so you need to keep track of this by yourself. **Be careful if you're doing this in a production environment. Each migration down will remove fields from the database (and the data stored in them is lost). If you migrate down too many times, you may accidentally remove fields you didn't intend to, and lose important data from the database.**
+> CAUTION: Unfortunately migrating up/down doesn't tell you which step you are on (unless you try to migrate past the last step), so you need to keep track of this by yourself. **Be careful if you're doing this in a production environment. Each migration down will remove fields from the database (and the data stored in them is lost). If you migrate down too many times, you may accidentally remove fields you didn't intend to, and lose important data from the database.**
 
 
 ## 1. Improvements to Custom Fields
 
-ID of the commit:
+ID of the main commit:
 ```
 1e83303519115acf3dd56259dd03c3569b05ea76
 ```
-To open the commit in GitHub, [click here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/1e83303519115acf3dd56259dd03c3569b05ea76).
+ID of bug fix commit:
+```
+32a8daf05fe9c310b98ed41102857261ed766183
+```
+
+To open these commits in GitHub, click here for [the main commit](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/1e83303519115acf3dd56259dd03c3569b05ea76) and the [bug fix](https://github.com/toekaa-lnu/easyappointments/commit/32a8daf05fe9c310b98ed41102857261ed766183) commit.
 
 
 ### 1.1. Configuration and Migration
