@@ -44,82 +44,29 @@ After you have double-checked (and possibly fixed) the migration script numberin
 php index.php console migrate
 ```
 
-### Undoing/Redoing the Migration
+> [!TIP]
+> Undoing/Redoing the Migration
+>
+> Should you want to undo/redo the migration (eg. if a database update is dependent of some configration value that you want to change), it is possible to migrate own and then back up, one step/script at the time. In that case you can first migrate down until you reach the migration script that you want to undo, change a value in `config.php`, and then migrate up until and including the last migration script to redo the changes (but now with the new configuration value):
+> ```bash
+> # Migrate four steps down
+> php index.php console migrate down
+> php index.php console migrate down
+> php index.php console migrate down
+> php index.php console migrate down
+>
+> # Change a configuration value, eg. MAX_CUSTOM_FIELDS or MAX_APPOINTMENT_CUSTOM_FIELDS
+>
+> # Migrate four steps up
+> php index.php console migrate up
+> php index.php console migrate up
+> php index.php console migrate up
+> php index.php console migrate up
+> ```
+>
+> [!CAUTION]
+> Unfortunately migrating up/down doesn't tell you which step you are on (unless you try to migrate past the last step), so you need to keep track of this by yourself. **Be careful if you're doing this in a production environment. Each migration down will remove fields from the database (and the data stored in them is lost). If you migrate down too many times, you may accidentally remove fields you didn't intend to, and lose important data from the database.**
 
-Should you want to undo/redo the migration (eg. if a database update is dependent of some configration value that you want to change), it is possible to migrate down and then back up, one step/script at the time. In that case you can first migrate down until you reach the migration script that you want to undo, change a value in `config.php`, and then migrate up until and including the last migration script to redo the changes (but now with the new configuration value):
-```bash
-# Migrate four steps down
-php index.php console migrate down
-php index.php console migrate down
-php index.php console migrate down
-php index.php console migrate down
-
-# Change a configuration value, eg. MAX_CUSTOM_FIELDS or MAX_APPOINTMENT_CUSTOM_FIELDS
-
-# Migrate four steps up
-php index.php console migrate up
-php index.php console migrate up
-php index.php console migrate up
-php index.php console migrate up
-```
-Unfortunately migrating up/down doesn't tell you which step you are on (unless you try to migrate past the last step), so you need to keep track of this by yourself. **Be careful if you're doing this in a production installation. Each migration down will remove fields from the database (and the data stored in them is lost). If you migrate down too many times, you may accidentally remove fields you didn't intend to, and lose important data from the database.**
-
-
-## 2. Support for Attached Files
-
-ID of the commit:
-```
-de4dec2da22f68e7f48f7e0bb89cb2065fab83a6
-```
-
-To open the commit in GitHub, [click here](https://github.com/alextselegidis/easyappointments/commit/de4dec2da22f68e7f48f7e0bb89cb2065fab83a6).
-
-### 2.1. Configuration and Migration
-
-After merging this commit to your build, you need to migrate the application database to support the new functionality.
-
-However, before going ahead with the migration, you may want to check the configuration related to attached files. In the `config.php` file in the root folder you can set the following values:
-```php
-const MAX_ATTACHED_FILES = 5;
-const ATTACHED_FILES_MAX_SIZE = 8000000; // Max size for one file in bytes
-const ATTACHED_FILES_ALLOWED_TYPES = '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-const ATTACHED_FILES_ALLOWED_TYPES_HINT = 'attached_files_user_allowed_types_hint';
-```
-These are just default values -- an administrator can change these later in the Booking Settings UI in the Admin panel.
-
-* `MAX_ATTACHED_FILES` is an upper limit, so an administrator can't set it to something higher (only lower).
-* `ATTACHED_FILES_MAX_SIZE` is the max size of one file in bytes. Note that the PHP system also has its own `upload_max_filesize` configuration in the `php.ini` file.
-* `ATTACHED_FILES_ALLOWED_TYPES` is a comma-separated list of file extensions and mime types. It is used both in the file picker in the frontend and in the backend when uploading the file.
-* `ATTACHED_FILES_ALLOWED_TYPES` is a text shown to the user in the booking form, and also as an error message if the file type is not one of the allowed types. It can be both a plain text string, or an ID in the language translation files.
-
-If you don't set these, default values are used.
-
-The default value for `ATTACHED_FILES_ALLOWED_TYPES`, is `attached_files_user_allowed_types_hint`, which is defined in the `application/language/english/translations_lang.php` language file:
-```php
-$lang['attached_files_user_allowed_types_hint'] = "Only Microsoft Word files (.doc, .docx) are accepted.";
-```
-Depending on what types of files you want to allow to be uploaded, you may want to change this to something more suitable.
-
-After double-checking the configuration and language files, you can proceed with the migration. This is done with two migration script files added to this commit:
-```
-065_add_attached_files_column_to_appointments_table.php
-066_insert_attached_files_rows_to_settings_table.php
-```
-
-See the [Migration instructions](#migration-instructions) how to handle the migration.
-
-### 2.3 Description of the Changes
-
-This commit adds support for attaching files to the booking. A number of settings are added to Admin > Booking Settings, that an administrator can use to:
-1. Activate/deactivate support for attached files
-2. Set the maximum number of attached files
-3. Set the maximum size for an attached file
-4. Set the allowed file types
-5. Set the text shown to the user in the booking form about allowed file types (the same text is used in the error message if an unallowed file type is uploaded). This can be an ID into the translation files (under `application/language/*/translations_lang.php`), or simply a plain text string if you don't need any translations.
-
-The customer can add up to the maximum number of files when creating a booking. When updating an existing booking, the customer can attach new files and discard previously attached (provided that the total max number is not exceeded). The provider can add and discard attached files in a similar way when adding or editing a booking in the calendar view in the admin panel.
-
-The emails sent to the customer after creating or editing a booking includes information about the attached files (the actual files are not attached).
 
 ## 1. Improvements to Custom Fields
 
@@ -134,7 +81,7 @@ To open the commit in GitHub, [click here](https://gitlab.com/lnu-ub/easyappoint
 
 This commit requires some updates to the database, so you need to do the migration.
 
-However, even before you do that, double check the configuration about the maximum number of custom fields that you want to have. The default is 5, but if you think that you may need more (now or in the future), you can update it to something higher. This just sets a maximum limit: each custom field can be enabled/disabled in the UI so you don't have to have them all active at the same time.
+However, even before you do that, double check the configuration about the maximum number of custom fields that you want to have. The default is 5 both for existing customer-specific custom fields and new appointment-specific custom fields, but if you think that you may need more (now or in the future), you can update it to something higher. This just sets a maximum limit: each custom field can be enabled/disabled in the UI so you don't have to have them all active at the same time. If you're happy with the default values, you don't need to add anything.
 
 To change the defaults, add the following lines the `config.php` file in the root folder (and change the value 5 to your max limit): 
 ```php
@@ -142,7 +89,7 @@ const MAX_CUSTOM_FIELDS = 5;
 const MAX_APPOINTMENT_CUSTOM_FIELDS = 5;
 ```
 
-The migration scripts read this value in order to add the preferred number of fields to the database tables, so that's why they need to be set before running the scripts. However, if these values are not set, the default values (5) are used.
+The migration scripts read this value in order to add the preferred number of fields to the database tables, so that's why they need to be set before running the scripts.
 
 After that, you're ready to proceed with the migration. This commit includes four migration scripts (in the `application/migrations/` folder) to update the database to support the improvements to the custom fields: 
 ```
@@ -326,3 +273,61 @@ custom_field_fruit {"type":"checkbox", "sort":"true"}
 The difference between radio buttons and checkboxes is that you can select several checkboxes in a group while only one radio button in a group can be selected.
 
 Just like with [options for select drop-down menus](#6-options-for-select-drop-down-menus), the number of checkboxes and radio buttons is automatically detected based on the ID:s in the translation files. Use the ID for the custom field label as a base ID, and then add `_1`, `_2`, `_3` (and so on) to the end of the base ID to define the items. There is a `_last` item too, but no `_prompt` item (not really needed, as all the items are visible immediately).
+
+
+## 2. Support for Attached Files
+
+ID of the commit:
+```
+de4dec2da22f68e7f48f7e0bb89cb2065fab83a6
+```
+
+To open the commit in GitHub, [click here](https://github.com/alextselegidis/easyappointments/commit/de4dec2da22f68e7f48f7e0bb89cb2065fab83a6).
+
+### 2.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+However, before going ahead with the migration, you may want to check the configuration related to attached files. In the `config.php` file in the root folder you can set the following values:
+```php
+const MAX_ATTACHED_FILES = 5;
+const ATTACHED_FILES_MAX_SIZE = 8000000; // Max size for one file in bytes
+const ATTACHED_FILES_ALLOWED_TYPES = '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const ATTACHED_FILES_ALLOWED_TYPES_HINT = 'attached_files_user_allowed_types_hint';
+```
+These are just default values -- an administrator can change these later in the Booking Settings UI in the Admin panel.
+
+* `MAX_ATTACHED_FILES` is an upper limit, so an administrator can't set it to something higher (only lower).
+* `ATTACHED_FILES_MAX_SIZE` is the max size of one file in bytes. Note that the PHP system also has its own `upload_max_filesize` configuration in the `php.ini` file.
+* `ATTACHED_FILES_ALLOWED_TYPES` is a comma-separated list of file extensions and mime types. It is used both in the file picker in the frontend and in the backend when uploading the file.
+* `ATTACHED_FILES_ALLOWED_TYPES` is a text shown to the user in the booking form, and also as an error message if the file type is not one of the allowed types. It can be both a plain text string, or an ID in the language translation files.
+
+If you don't set these, default values are used.
+
+The default value for `ATTACHED_FILES_ALLOWED_TYPES`, is `attached_files_user_allowed_types_hint`, which is defined in the `application/language/english/translations_lang.php` language file:
+```php
+$lang['attached_files_user_allowed_types_hint'] = "Only Microsoft Word files (.doc, .docx) are accepted.";
+```
+Depending on what types of files you want to allow to be uploaded, you may want to change this to something more suitable.
+
+After double-checking the configuration and language files, you can proceed with the migration. This is done with two migration script files added to this commit:
+```
+065_add_attached_files_column_to_appointments_table.php
+066_insert_attached_files_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 2.3 Description of the Changes
+
+This commit adds support for attaching files to the booking. A number of settings are added to Admin > Booking Settings, that an administrator can use to:
+1. Activate/deactivate support for attached files
+2. Set the maximum number of attached files
+3. Set the maximum size for an attached file
+4. Set the allowed file types
+5. Set the text shown to the user in the booking form about allowed file types (the same text is used in the error message if an unallowed file type is uploaded). This can be an ID into the translation files (under `application/language/*/translations_lang.php`), or simply a plain text string if you don't need any translations.
+
+The customer can add up to the maximum number of files when creating a booking. When updating an existing booking, the customer can attach new files and discard previously attached (provided that the total max number is not exceeded). The provider can add and discard attached files in a similar way when adding or editing a booking in the calendar view in the admin panel.
+
+The emails sent to the customer after creating or editing a booking includes information about the attached files (the actual files are not attached).
+
