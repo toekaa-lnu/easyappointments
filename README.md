@@ -2,7 +2,7 @@
 
 This is the Linnaeus University ("Lnu") Library fork of the Easy!Appointments booking application. This README file is mainly for publishing and describing the changes made by Lnu to the original repository. If you're looking for the original Easy!Appointments README file, it can be found here: [README_ORIG.md](README_ORIG.md).
 
-EasyAppointments is used at Lnu by our text tutors so that students can book a tutoring session. Also our Talking Book support team has expressed interest in using it. Both of these teams have requested adaptations which I have implemented (and are continuing to implement). We have tried to make them configurable so that hopefully others will find them useful too.
+EasyAppointments is used at Lnu by our text tutors so that students can book a tutoring session. Also our talking book support team has expressed interest in using it. Both of these teams have requested adaptations which I have implemented (and are continuing to implement). We have tried to make them configurable so that hopefully others will find them useful too.
 
 Here is a list of changes we have done so far. More detailed instructions will be added as we publish each change to GitLab:
 
@@ -11,25 +11,50 @@ Here is a list of changes we have done so far. More detailed instructions will b
     2. [Description of the Changes](#12-description-of-the-changes)
         1. [Configurable Max Number of Custom Fields](#121-configurable-max-number-of-custom-fields)
         2. [Appointment-specific Custom Fields](#122-appointment-specific-custom-fields)
-        2. [Translation of Field Labels and Values](#123-translation-of-field-labels-and-values)
-        2. [Support for Additional Input Types](#124-support-for-additional-input-types)
-        2. [Support for HTML Attributes](#125-support-for-html-attributes)
-        2. [Options for Select Drop-down Menus](#126-options-for-select-drop-down-menus)
-        2. [Handling Groups of Checkboxes and Radio Buttons](#127-handling-groups-of-checkboxes-and-radio-buttons)
-2. [Support for Attached Files](#2-support-for-attached-files)
+        3. [Translation of Field Labels and Values](#123-translation-of-field-labels-and-values)
+        4. [Support for Additional Input Types](#124-support-for-additional-input-types)
+        5. [Support for HTML Attributes](#125-support-for-html-attributes)
+        6. [Options for Select Drop-down Menus](#126-options-for-select-drop-down-menus)
+        7. [Handling Groups of Checkboxes and Radio Buttons](#127-handling-groups-of-checkboxes-and-radio-buttons)
+2. **[Support for Attached Files](#2-support-for-attached-files)**
     1. [Configuration and Migration](#21-configuration-and-migration)
     2. [Description of the Changes](#22-description-of-the-changes)
 3. Hide Provider Selection
-4. Mark Availability in Calendar View
-5. Booking Lead Time
-6. Customer Booking Limits
-7. Hide Timezone for Customers
-8. Appointment Colour by Provider
+4. Booking Lead Time
+5. Customer Booking Limits
+6. Hide Timezone for Customers
+7. Mark Availability in Calendar View
+8. Appointment Colour by Provider in Calendar View
 
-There are also a [Migration instructions](#migration-instructions). Most of the changes listed above require updates to the application database, and this usually involves renaming the migration script files and then running a migration command.
+Please see the [Merge and Migration instructions](#merge-and-migration-instructions) about how to take these changes into use in your own build.
 
 
-## Migration instructions
+
+## Merge and Migration instructions
+
+The usual disclaimer is that this code is provided as-is. To use it is at your own choice and at your own risk. We cannot not held responsible for any damage or loss of data resulting of the use of this code. Having said that, the code is working fine for us and we are not aware of any bugs. Our goal for publishing this code is to let others benefit from the work we have done, just like we have benefitted from being able to use the original EasyAppointments code.
+
+You are free to take this code into use in your own build and improve and adapt it to your own purposes as you wish. Feel free to ask questions if you run into problems but be aware that we may not be able to or have time to help, as we have other duties and priorities as part of our daily work.
+
+Like the original EasyAppointments, this code is licensed under [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html)  and content under [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/).
+
+### Code Merge
+
+There are a few different ways to take these changes into use in your own EasyAppointments installation.
+
+The fastest way is to add this repository as a remote to your EasyAppointments git repository, fetch the changes in this repository and then cherrypick the commit(s) for the change that you want to include in your repository. You can find the commit SHA in the description for each change. 
+
+```bash
+git remote add lnu https://github.com/toekaa-lnu/easyappointments.git
+git fetch lnu
+git cherry-pick <commit-sha>
+```
+
+Another way to is just to look at the commits in GitHub and see the difference in the code for each included file, and then re-implement the changes in your own EasyAppointments code. This is maybe initially more time-consuming, but you'll gain a better understaning of the changes and will be able to solve any possible code conflict better, than just doing a merge/cherry-pick with git.
+
+### Database Migration
+
+Most of the changes require updates to the EasyAppointments application database, and this usually involves renaming the migration script files and then running a migration command.
 
 After merging a commit to your build, check the `application/migrations/` folder for any new migration script files added to the commit. These files might look eg. like this:
 ```
@@ -69,11 +94,11 @@ php index.php console migrate
 
 ## 1. Improvements to Custom Fields
 
-ID of the main commit:
+SHA of the main commit:
 ```
 1e83303519115acf3dd56259dd03c3569b05ea76
 ```
-ID of bug fix commit:
+SHA of bug fix commit:
 ```
 32a8daf05fe9c310b98ed41102857261ed766183
 ```
@@ -281,7 +306,7 @@ Just like with [options for select drop-down menus](#6-options-for-select-drop-d
 
 ## 2. Support for Attached Files
 
-ID of the commit:
+SHA of the commit:
 ```
 de4dec2da22f68e7f48f7e0bb89cb2065fab83a6
 ```
