@@ -540,7 +540,10 @@ body .clearfix {
 }
 .subsettings .form-control {
     width: 30%;
-    padding: 0 0.5rem 0 0.5rem !important;
+    margin-bottom: 0.3rem;
+}
+.subsettings .form-check-input {
+    margin-top: 0.85em;
 }
 .subsettings label {
     width: 70%;

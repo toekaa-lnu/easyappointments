@@ -272,6 +272,8 @@ class Booking extends EA_Controller
             'customer_token' => $customer_token,
             'default_language' => setting('default_language'),
             'default_timezone' => setting('default_timezone'),
+            'hide_provider_selection' => setting('hide_provider_selection'),
+            'ANY_PROVIDER' => ANY_PROVIDER,
         ]);
 
         html_vars([
@@ -551,14 +553,24 @@ class Booking extends EA_Controller
 
         $hour = $appointment_start->format('H:i');
 
+        $service = $this->services_model->find($appointment['id_services']);
+        $service_id = $service['id'];
+
         if ($appointment['id_users_provider'] === ANY_PROVIDER) {
-            $appointment['id_users_provider'] = $this->search_any_provider($appointment['id_services'], $date, $hour);
+            $provider_id = null;
+            switch (setting('provider_selection_method')) {
+                case 'around_date': 
+                    $provider_id = $this->search_furthest_booking_provider_around_booking_date($service_id, $appointment_start);
+                    break;
+                default:
+                    $provider_id = $this->search_any_provider($service_id, $date, $hour);
+                    break;
+            }
+            $appointment['id_users_provider'] = $provider_id;
 
             return $appointment['id_users_provider'];
         }
-
-        $service = $this->services_model->find($appointment['id_services']);
-
+        
         $exclude_appointment_id = $appointment['id'] ?? null;
 
         $provider = $this->providers_model->find($appointment['id_users_provider']);
@@ -585,7 +597,70 @@ class Booking extends EA_Controller
     }
 
     /**
+     * Search for available service providers on the given date and time.
+     *
+     * This method will return an array of available providers.
+     *
+     * @param int $service_id Service ID
+     * @param string $date Selected date (Y-m-d).
+     * @param string|null $hour Selected hour (H:i).
+     *
+     * @return array Returns an array of available providers, or empty array.
+     *
+     * @throws Exception
+     */
+    protected function get_providers_available_for_service_on_datetime(int $service_id, string $date, string $hour): array
+    {
+        $available_providers = [];
+        $all_providers = $this->providers_model->get_available_providers(true);
+        $service = $this->services_model->find($service_id);
+
+        foreach ($all_providers as $provider) {
+            $provider_id = $provider['id'];
+            foreach ($provider['services'] as $provider_service_id) {
+                if ($provider_service_id == $service_id) {
+                    // Check if the provider is available for the requested date.
+                    $available_hours = $this->availability->get_available_hours($date, $service, $provider);
+                    if (empty($hour) || in_array($hour, $available_hours)) {
+                        $available_providers[] = $provider['id'];
+                    }
+                }
+            }
+        }
+        return $available_providers;
+    }
+
+    /**
+     * Search for a provider whose existing bookings are furthest from the new booking
+     * 
+     * Steps:
+     * 1. Get a list of providers available for the new booking
+     * 2. For each of these providers, find their existing booking which is closest in time to the new booking
+     * 3. Among these closest bookings, find the one which is furthest in time from the new booking
+     * 4. Select the provider having this furthest booking
+     *
+     * This method will return a list of providers available.
+     *
+     * @param int $service_id Service ID
+     * @param string $date Selected date (Y-m-d).
+     * @param string|null $hour Selected hour (H:i).
+     *
+     * @return array Returns an array of available providers, or empty array.
+     *
+     * @throws Exception
+     */
+    protected function search_furthest_booking_provider_around_booking_date(int $service_id, DateTime $appointment_start): ?int
+    {
+        log_message('debug', 'search_provider_available_around_date()');
+        $available_providers = $this->get_providers_available_for_service_on_datetime($service_id, $appointment_start->format('Y-m-d'), $appointment_start->format('H:i'));
+        $provider_id = $this->providers_model->get_service_provider_around_date($service_id, $appointment_start, $available_providers);
+        log_message('debug', '$provider_id:' . $provider_id);
+        return $provider_id;
+    }
+
+    /**
      * Search for any provider that can handle the requested service.
+     * NB: Only considers availability on the date of the new booking
      *
      * This method will return the database ID of the provider with the most available periods.
      *
@@ -597,14 +672,12 @@ class Booking extends EA_Controller
      *
      * @throws Exception
      */
-    protected function search_any_provider(int $service_id, string $date, ?string $hour = null): ?int
+    protected function search_any_provider(int $service_id, string $date, string $hour): ?int
     {
+        log_message('debug', 'search_least_bookings_provider_on_booking_date()');
         $available_providers = $this->providers_model->get_available_providers(true);
-
         $service = $this->services_model->find($service_id);
-
         $provider_id = null;
-
         $max_hours_count = 0;
 
         foreach ($available_providers as $provider) {
@@ -612,19 +685,17 @@ class Booking extends EA_Controller
                 if ($provider_service_id == $service_id) {
                     // Check if the provider is available for the requested date.
                     $available_hours = $this->availability->get_available_hours($date, $service, $provider);
-
                     if (
                         count($available_hours) > $max_hours_count &&
                         (empty($hour) || in_array($hour, $available_hours))
                     ) {
                         $provider_id = $provider['id'];
-
                         $max_hours_count = count($available_hours);
                     }
                 }
             }
         }
-
+        log_message('debug', '$provider_id:' . $provider_id);
         return $provider_id;
     }
 

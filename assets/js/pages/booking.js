@@ -266,16 +266,18 @@ App.Pages.Booking = (function () {
                 $selectProvider.val(selectedProviderId).trigger('change');
             }
 
+            const selectHiddenAnyProvider = Boolean(Number(vars('display_any_provider'))) && Boolean(Number(vars('hide_provider_selection')));
+
             if (
                 (selectedServiceId && selectedProviderId) ||
-                (vars('available_services').length === 1 && vars('available_providers').length === 1)
+                (vars('available_services').length === 1 && (vars('available_providers').length === 1 || selectHiddenAnyProvider) )
             ) {
                 if (!selectedServiceId) {
                     $selectService.val(vars('available_services')[0].id).trigger('change');
                 }
 
                 if (!selectedProviderId) {
-                    $selectProvider.val(vars('available_providers')[0].id).trigger('change');
+                    $selectProvider.val(selectHiddenAnyProvider ? vars('ANY_PROVIDER') : vars('available_providers')[0].id).trigger('change');
                 }
 
                 $('.active-step').removeClass('active-step');
@@ -427,7 +429,8 @@ App.Pages.Booking = (function () {
         $selectService.on('change', (event) => {
             const $target = $(event.target);
             const serviceId = $selectService.val();
-            $selectProvider.parent().prop('hidden', !Boolean(serviceId));
+            const selectHiddenAnyProvider = Boolean(Number(vars('display_any_provider'))) && Boolean(Number(vars('hide_provider_selection')));
+            $selectProvider.parent().prop('hidden', (!Boolean(serviceId) || selectHiddenAnyProvider));
 
             $selectProvider.empty();
 
@@ -450,12 +453,16 @@ App.Pages.Booking = (function () {
 
             if (providerOptionCount === 2) {
                 $selectProvider.find('option[value=""]').remove();
+                $selectProvider.val($("#select-provider option:first").val())
             }
 
             // Add the "Any Provider" entry
 
             if (providerOptionCount > 2 && Boolean(Number(vars('display_any_provider')))) {
                 $(new Option(lang('any_provider'), 'any-provider')).insertAfter($selectProvider.find('option:first'));
+                if (selectHiddenAnyProvider) {
+                    $selectProvider.val(vars('ANY_PROVIDER'));
+                }
             }
 
             App.Http.Booking.getUnavailableDates(
@@ -800,13 +807,19 @@ App.Pages.Booking = (function () {
         const serviceId = $selectService.val();
         const providerId = $selectProvider.val();
 
+        const selectHiddenAnyProvider = Boolean(Number(vars('display_any_provider'))) && Boolean(Number(vars('hide_provider_selection')));
+
         $displayBookingSelection.text(`${lang('service')} │ ${lang('provider')}`); // Notice: "│" is a custom ASCII char
 
         const serviceOptionText = serviceId ? $selectService.find('option:selected').text() : lang('service');
         const providerOptionText = providerId ? $selectProvider.find('option:selected').text() : lang('provider');
 
         if (serviceId || providerId) {
-            $displayBookingSelection.text(`${serviceOptionText} │ ${providerOptionText}`);
+            if (selectHiddenAnyProvider) {
+                $displayBookingSelection.text(`${serviceOptionText}`);
+            } else {
+                $displayBookingSelection.text(`${serviceOptionText} │ ${providerOptionText}`);
+            }
         }
 
         if (!$availableHours.find('.selected-hour').text()) {
@@ -844,7 +857,7 @@ App.Pages.Booking = (function () {
                 <div class="mb-2 fw-bold fs-3">
                     ${serviceOptionText}
                 </div> 
-                <div class="mb-2 fw-bold text-muted">
+                <div class="mb-2 fw-bold text-muted" ${selectHiddenAnyProvider ? style="display:none;" : ""}>
                     ${providerOptionText}
                 </div>
                 <div class="mb-2">

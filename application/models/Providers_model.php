@@ -657,6 +657,51 @@ class Providers_model extends EA_Model
     }
 
     /**
+     * Get the record of the provider for the specified service who has the most availability around a specified time.
+     * In case of equal availability (eg. no bookings at all), a provider is chosen at random.
+     *
+     * @param DateTime $time 
+     *
+     * @return array Returns a provider.
+     */
+    public function get_service_provider_around_date(int $service_id, DateTime $time, array $available_providers): ?int
+    {
+        log_message('debug', 'get_service_provider_around_date()');
+
+        $provider_id = null;
+        $timeString = $time->format('Y-m-d H:i:s');
+
+        $provider_appt_dists = $this->db
+            ->select("id_users_provider, MIN(ABS(TIMESTAMPDIFF(MINUTE, '$timeString', start_datetime))) AS nearest_dist")
+            ->from('appointments')
+            ->where_in('id_users_provider', $available_providers)
+            ->group_by('id_users_provider')
+            ->order_by('nearest_dist', 'DESC')
+            ->get()
+            ->result_array();
+
+        //foreach ($provider_appt_dists as $provider_appt_dist) {
+        //    log_message('debug', sprintf('provider: %s / distance: %s', $provider_appt_dist['id_users_provider'], $provider_appt_dist['nearest_dist']));
+        //}
+
+        $providers_with_bookings = array_column($provider_appt_dists, 'id_users_provider');
+        //log_message('debug', sprintf('providers with bookings: %s', count($providers_with_bookings)));
+        $providers_without_bookings = array_diff($available_providers, $providers_with_bookings);
+        //log_message('debug', sprintf('providers without bookings: %s', count($providers_without_bookings)));
+
+        if (count($providers_without_bookings) > 0) {
+            $provider_id = $providers_without_bookings[rand(0, count($free_provider_ids)-1)];
+            //log_message('debug', sprintf('random provider selected'));
+        } else {
+            $provider_id = $providers_with_bookings[0];
+            //log_message('debug', sprintf('provider with the least near appointment selected'));
+        }
+
+        //log_message('debug', sprintf('selected provider id: %s', $provider_id));
+        return $provider_id;
+    }
+
+    /**
      * Get the query builder interface, configured for use with the users (provider-filtered) table.
      *
      * @return CI_DB_query_builder

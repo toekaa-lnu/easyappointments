@@ -529,4 +529,9 @@ $lang['megabytes'] = "%d MB";
 $lang['kilobytes'] = "%d kB";
 $lang['bytes'] = "%d bytes";
 $lang['previously_attached'] = "previously attached";
+$lang['hide_provider_selection'] = 'Hide provider selection';
+$lang['provider_selection_method'] = 'Provider selection method';
+$lang['provider_selection_on_date'] = 'Available on date';
+$lang['provider_selection_around_date'] = 'Available around booking';
+$lang['hide_provider_selection_hint'] = 'If enabled, provider selection is hidden from customers. When multiple providers are available, one is selected by the chosen algorthm: \'Available around booking\' selects the provider whose existing bookings are the furthest away from the new booking date and time. \'Available on date\' selects the provider with the least number of existing bookings on the new booking date.';
 // End

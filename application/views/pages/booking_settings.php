@@ -447,10 +447,32 @@ $max_appt_custom_fields = config('max_appt_custom_fields', 5);
                                                 <?= lang('any_provider') ?>
                                             </label>
                                         </div>
+                                        <div class="subsettings fields-row">
+                                            <div class="form-group row form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" id="hide-provider-selection"
+                                                    data-field="hide_provider_selection">
+                                                <label class="form-check-label col-7" for="hide-provider-selection">
+                                                    <?= lang('hide_provider_selection') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <select class="form-select form-control form-control-sm col-3" id="provider-selection-method"
+                                                    data-field="provider_selection_method">
+                                                    <option value="on_date"><?= lang('provider_selection_on_date') ?></option>
+                                                    <option value="around_date"><?= lang('provider_selection_around_date') ?></option>
+                                                </select>
+                                                <label class="form-check-label col-7" for="provider-selection-method">
+                                                    <?= lang('provider_selection_method') ?>
+                                                </label>
+                                            </div>
+                                        </div>
 
                                         <div class="form-text text-muted">
                                             <small>
                                                 <?= lang('display_any_provider_hint') ?>
+                                            </small>
+                                            <small>
+                                                <?= lang('hide_provider_selection_hint') ?>
                                             </small>
                                         </div>
                                     </div>
