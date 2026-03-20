@@ -19,7 +19,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 2. **[Support for Attached Files](#2-support-for-attached-files)**
     1. [Configuration and Migration](#21-configuration-and-migration)
     2. [Description of the Changes](#22-description-of-the-changes)
-3. Hide Provider Selection
+3. **[Hide Provider Selection](#3-hide-provider-selection)**
+    1. [Configuration and Migration](#21-configuration-and-migration)
+    2. [Description of the Changes](#22-description-of-the-changes)
 4. Booking Lead Time
 5. Customer Booking Limits
 6. Hide Timezone for Customers
@@ -359,4 +361,40 @@ This commit adds support for attaching files to the booking. A number of setting
 The customer can add up to the maximum number of files when creating a booking. When updating an existing booking, the customer can attach new files and discard previously attached (provided that the total max number is not exceeded). The provider can add and discard attached files in a similar way when adding or editing a booking in the calendar view in the admin panel.
 
 The emails sent to the customer after creating or editing a booking includes information about the attached files (the actual files are not attached).
+
+
+## 3. Hide Provider Selection
+
+SHA of the commit:
+```
+6827050704896c109612840ef96012e68f82b5b1
+```
+
+To open this commit in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6827050704896c109612840ef96012e68f82b5b1).
+
+This commit is built on top of some functionality added in **[Support for Attached Files](#2-support-for-attached-files)** (support for subsettings in Booking Settings), so you'll need to add the commit(s) from that change too.
+
+### 3.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+067_insert_hide_providers_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 3.3 Description of the Changes
+
+This commit adds two new settings in Admin > Settings > Booking Settings. These settings are related to hiding the provider selection from the booking wizard, and are implemented as subsettings under the existing 'Any Provider' setting:
+* **Hide provider selection**. Activating this setting will hide the "Provider" selection completely from the booking wizard. The effect is the same as always selecting the "Any provider" setting if there's multiple providers for a service, or the one and only provider if only one is available. The mail sent to the customer includes the name of the selected provider.
+* **Provider selection method**. A new algorithm is added for selecting the provider when "Any provider" is selected. The legacy one (now selectable as 'Available on date" in the Settings UI) was only looking at the date of the new booking, and selected the provider that had the most available periods on that date. The new algorithm ('Available around booking') also looks at dates around the new booking, and selects the provider with the longest availability around the new booking. This works better when providers only have at most one or two available timeslots per day.
+
+> Fo a more detailed description, the new 'Available around booking' algorithm uses the following steps to select a provider:
+> 1. It gets a list of providers available for the selected date and time.
+> 2. For each of these providers, it chooses their existing appointment which is closest in time to the new booking.
+> 3. Among all these closest appointments, it finds the provider having the appointment furthest away from the new booking.
+>
+> The goal is to distribute the bookings among the providers as evenly as possible over time. Of course the algorithm is only used when there actually are multiple providers available for a booked timeslot.
 
