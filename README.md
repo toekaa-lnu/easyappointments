@@ -365,12 +365,17 @@ The emails sent to the customer after creating or editing a booking includes inf
 
 ## 3. Hide Provider Selection
 
-SHA of the commit:
+SHA of the main commit:
 ```
 6827050704896c109612840ef96012e68f82b5b1
 ```
 
-To open this commit in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6827050704896c109612840ef96012e68f82b5b1).
+SHA of the bug fix commit:
+```
+841aa8e3b7d5fc1b465805687f5ab81733bf6ba8
+```
+
+To open these commits in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6827050704896c109612840ef96012e68f82b5b1) for the main commit and [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/841aa8e3b7d5fc1b465805687f5ab81733bf6ba8) for the bug fix commit.
 
 This commit is built on top of some functionality added in **[Support for Attached Files](#2-support-for-attached-files)** (support for subsettings in Booking Settings), so you'll need to add the commit(s) from that change too.
 
