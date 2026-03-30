@@ -690,7 +690,7 @@ class Providers_model extends EA_Model
         //log_message('debug', sprintf('providers without bookings: %s', count($providers_without_bookings)));
 
         if (count($providers_without_bookings) > 0) {
-            $provider_id = $providers_without_bookings[rand(0, count($free_provider_ids)-1)];
+            $provider_id = $providers_without_bookings[rand(0, count($providers_without_bookings)-1)];
             //log_message('debug', sprintf('random provider selected'));
         } else {
             $provider_id = $providers_with_bookings[0];
