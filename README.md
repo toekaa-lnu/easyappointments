@@ -20,9 +20,11 @@ Here is a list of changes we have done so far. More detailed instructions will b
     1. [Configuration and Migration](#21-configuration-and-migration)
     2. [Description of the Changes](#22-description-of-the-changes)
 3. **[Hide Provider Selection](#3-hide-provider-selection)**
-    1. [Configuration and Migration](#21-configuration-and-migration)
-    2. [Description of the Changes](#22-description-of-the-changes)
-4. Booking Lead Time
+    1. [Configuration and Migration](#31-configuration-and-migration)
+    2. [Description of the Changes](#32-description-of-the-changes)
+4. **[Unit selection for booking advance timeout](#4-unit-selection-for-booking-advance-timeout)**
+    1. [Configuration and Migration](#41-configuration-and-migration)
+    2. [Description of the Changes](#42-description-of-the-changes)
 5. Customer Booking Limits
 6. Hide Timezone for Customers
 7. Mark Availability in Calendar View
@@ -390,7 +392,7 @@ This is done with a migration script file added to this commit. This file can be
 
 See the [Migration instructions](#migration-instructions) how to handle the migration.
 
-### 3.3 Description of the Changes
+### 3.2 Description of the Changes
 
 This commit adds two new settings in Admin > Settings > Booking Settings. These settings are related to hiding the provider selection from the booking wizard, and are implemented as subsettings under the existing 'Any Provider' setting:
 * **Hide provider selection**. Activating this setting will hide the "Provider" selection completely from the booking wizard. The effect is the same as always selecting the "Any provider" setting if there's multiple providers for a service, or the one and only provider if only one is available. The mail sent to the customer includes the name of the selected provider.
@@ -403,3 +405,39 @@ This commit adds two new settings in Admin > Settings > Booking Settings. These 
 >
 > The goal is to distribute the bookings among the providers as evenly as possible over time. Of course the algorithm is only used when there actually are multiple providers available for a booked timeslot.
 
+
+## 4. Unit selection for booking advance timeout
+
+SHA of the main commit:
+```
+6e3bd489863901ee4597d0e2cc236bd0b62ebde3
+```
+
+SHA of the bug fix commit:
+```
+4f0b8a74f327bec1e519929d2101adfe6a087e38
+```
+
+To open these commits in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6e3bd489863901ee4597d0e2cc236bd0b62ebde3) for the main commit and [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/4f0b8a74f327bec1e519929d2101adfe6a087e38) for the bug fix commit.
+
+
+### 4.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+068_insert_book_advance_timeout_unit_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 4.2 Description of the Changes
+
+This commit adds a new setting in Admin > Settings > Business Logic. The setting is an improvement to the existing "Allow Rescheduling/Cancellation Before" setting, so that now also the unit for the timeout can be specified:
+* minutes
+* hours
+* days
+* weekdays
+
+Earlier the timeout could only be specified in minutes.
