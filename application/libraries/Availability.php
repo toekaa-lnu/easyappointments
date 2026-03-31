@@ -591,8 +591,9 @@ class Availability
         $provider_timezone = new DateTimeZone($provider['timezone']);
 
         $book_advance_timeout = setting('book_advance_timeout');
+        $book_advance_timeout_unit = setting('book_advance_timeout_unit', 'minutes');
 
-        $threshold = new DateTime('+' . $book_advance_timeout . ' minutes', $provider_timezone);
+        $threshold = new DateTime('+' . $book_advance_timeout . ' ' . $book_advance_timeout_unit, $provider_timezone);
 
         foreach ($available_hours as $index => $value) {
             $available_hour = new DateTime($date . ' ' . $value, $provider_timezone);

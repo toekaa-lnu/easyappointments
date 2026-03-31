@@ -96,10 +96,19 @@
 
                         <div class="mb-5">
                             <label for="book-advance-timeout" class="form-label">
-                                <?= lang('timeout_minutes') ?>
+                                <?= lang('book_advance_timeout') ?>
                             </label>
                             <input id="book-advance-timeout" data-field="book_advance_timeout" class="form-control"
-                                   type="number" min="15">
+                                   type="number" min="0">
+                            <label for="book-advance-timeout-unit" class="form-label">
+                                <?= lang('book_advance_timeout_unit') ?>
+                            </label><br>
+                            <select id="book-advance-timeout-unit" data-field="book_advance_timeout_unit" class="form-select form-control">
+                                <option value="minutes"><?= lang('minutes') ?></option>
+                                <option value="hours"><?= lang('hours') ?></option>
+                                <option value="days"><?= lang('days') ?></option>
+                                <option value="weekdays"><?= lang('weekdays') ?></option>
+                            </select>
                             <div class="form-text text-muted">
                                 <small>
                                     <?= lang('book_advance_timeout_hint') ?>
