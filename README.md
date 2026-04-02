@@ -313,12 +313,17 @@ Just like with [options for select drop-down menus](#6-options-for-select-drop-d
 
 ## 2. Support for Attached Files
 
-SHA of the commit:
+SHA of the main commit:
 ```
 de4dec2da22f68e7f48f7e0bb89cb2065fab83a6
 ```
 
-To open the commit in GitHub, [click here](https://github.com/alextselegidis/easyappointments/commit/de4dec2da22f68e7f48f7e0bb89cb2065fab83a6).
+SHA of the bug fix commit:
+```
+fe04ec19f995a98dac586bc807489a72f440e249
+```
+
+To open the commits in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/de4dec2da22f68e7f48f7e0bb89cb2065fab83a6) for the main commit, and [here](https://github.com/alextselegidis/easyappointments/commit/fe04ec19f995a98dac586bc807489a72f440e249)for the bug fix commit.
 
 ### 2.1. Configuration and Migration
 
