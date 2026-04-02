@@ -25,6 +25,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 4. **[Unit selection for booking advance timeout](#4-unit-selection-for-booking-advance-timeout)**
     1. [Configuration and Migration](#41-configuration-and-migration)
     2. [Description of the Changes](#42-description-of-the-changes)
+5. **[Cooldown period for services](#5-cooldown-period-for-services)**
+    1. [Configuration and Migration](#51-configuration-and-migration)
+    2. [Description of the Changes](#52-description-of-the-changes)
 5. Customer Booking Limits
 6. Hide Timezone for Customers
 7. Mark Availability in Calendar View
@@ -427,7 +430,7 @@ After merging this commit to your build, you need to migrate the application dat
 
 This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
 ```
-068_insert_book_advance_timeout_unit_rows_to_settings_table.php
+069_insert_cooldown_column_to_services_table.php
 ```
 
 See the [Migration instructions](#migration-instructions) how to handle the migration.
@@ -441,3 +444,31 @@ This commit adds a new setting in Admin > Settings > Business Logic. The setting
 * weekdays
 
 Earlier the timeout could only be specified in minutes.
+
+
+## 5. Cooldown period for services
+
+SHA of the commit:
+```
+89a56da0c98b52824c7574fb9e526c5a444a13c6
+```
+
+To open this commit in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/89a56da0c98b52824c7574fb9e526c5a444a13c6).
+
+
+### 5.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+069_insert_book_advance_timeout_unit_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 5.2 Description of the Changes
+
+This commit adds a new "Cooldown" setting for each service under Admin > Services. This is meant as a period of extra time after the appointment, where the provider can wrap up the meeting (make notes, have a cup of coffee, go to toilet...). The cooldown period is automatically added to the duration of the booking, but not communicated to the customer. Customers are not able to book another appointment during the cooldown period.
+
+For example, when the customer books a service with a 30 minute duration and 15 minute cooldown, the duration communicated to the customer is 30 minutes (in the booking confirmation screen and in the confirmation email), but the appointment occupies a 45-minute slot in the calendar. 
