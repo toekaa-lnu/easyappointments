@@ -45,9 +45,11 @@ App.Http.Calendar = (function () {
         formData.append('post_data', JSON.stringify(postData));
         formData.append('csrf_token', vars('csrf_token'));
 
-        attachedFiles.forEach((attachedFile, index) => {
-            formData.append(`attached_file_data_${index+1}`, attachedFile);
-        });
+        if (attachedFiles) {
+            attachedFiles.forEach((attachedFile, index) => {
+                formData.append(`attached_file_data_${index+1}`, attachedFile);
+            });
+        }
 
         const url = App.Utils.Url.siteUrl('calendar/save_appointment');
 

@@ -887,7 +887,7 @@ App.Utils.CalendarDefaultView = (function () {
             };
 
             // Update appointment data.
-            App.Http.Calendar.saveAppointment(appointment, null, successCallback);
+            App.Http.Calendar.saveAppointment(appointment, null, null, null, successCallback);
         } else {
             // Update unavailability time period.
             const unavailability = {
@@ -1035,7 +1035,7 @@ App.Utils.CalendarDefaultView = (function () {
             };
 
             // Update appointment data.
-            App.Http.Calendar.saveAppointment(appointment, null, successCallback);
+            App.Http.Calendar.saveAppointment(appointment, null, null, null, successCallback);
         } else {
             // Update unavailability time period.
             const unavailability = {
