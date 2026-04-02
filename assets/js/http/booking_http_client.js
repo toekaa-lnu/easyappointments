@@ -49,16 +49,12 @@ App.Http.Booking = (function () {
         // Find the selected service duration (it is going to be send within the "data" object).
         const serviceId = $selectService.val();
 
-        // Default value of duration (in minutes).
-        let serviceDuration = 15;
-
         const service = vars('available_services').find(
             (availableService) => Number(availableService.id) === Number(serviceId),
         );
 
-        if (service) {
-            serviceDuration = service.duration;
-        }
+        const serviceDuration = parseInt(service ? service.duration : 15);
+        const serviceCooldown = parseInt(service ? service.cooldown : 0);
 
         // If the manage mode is true then the appointment's start date should return as available too.
         const appointmentId = vars('manage_mode') ? vars('appointment_data').id : null;
@@ -72,6 +68,7 @@ App.Http.Booking = (function () {
             provider_id: $selectProvider.val(),
             selected_date: selectedDate,
             service_duration: serviceDuration,
+            service_cooldown: serviceCooldown,
             manage_mode: Number(vars('manage_mode') || 0),
             appointment_id: appointmentId,
         };

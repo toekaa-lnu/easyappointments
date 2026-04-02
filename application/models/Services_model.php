@@ -38,6 +38,7 @@ class Services_model extends EA_Model
         'id' => 'id',
         'name' => 'name',
         'duration' => 'duration',
+        'cooldown' => 'cooldown',
         'price' => 'price',
         'currency' => 'currency',
         'description' => 'description',
@@ -411,6 +412,7 @@ class Services_model extends EA_Model
             'id' => array_key_exists('id', $service) ? (int) $service['id'] : null,
             'name' => $service['name'],
             'duration' => (int) $service['duration'],
+            'cooldown' => (int) $service['cooldown'],
             'price' => (float) $service['price'],
             'currency' => $service['currency'],
             'description' => $service['description'],
@@ -445,6 +447,10 @@ class Services_model extends EA_Model
 
         if (array_key_exists('duration', $service)) {
             $decoded_resource['duration'] = $service['duration'];
+        }
+
+        if (array_key_exists('cooldown', $service)) {
+            $decoded_resource['cooldown'] = $service['cooldown'];
         }
 
         if (array_key_exists('price', $service)) {

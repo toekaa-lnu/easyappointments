@@ -24,6 +24,7 @@ class Services extends EA_Controller
         'id',
         'name',
         'duration',
+        'cooldown',
         'price',
         'currency',
         'description',
@@ -81,6 +82,7 @@ class Services extends EA_Controller
             'user_id' => $user_id,
             'role_slug' => $role_slug,
             'event_minimum_duration' => EVENT_MINIMUM_DURATION,
+            'event_minimum_cooldown' => EVENT_MINIMUM_COOLDOWN,
         ]);
 
         html_vars([

@@ -249,7 +249,8 @@ App.Components.AppointmentsModal = (function () {
                 (availableService) => Number(availableService.id) === Number(serviceId),
             );
 
-            const duration = service ? service.duration : 60;
+            const duration = parseInt(service ? service.duration : 60);
+            const cooldown = parseInt(service ? service.cooldown : 0);
 
             const startMoment = moment();
 
@@ -266,7 +267,7 @@ App.Components.AppointmentsModal = (function () {
             }
 
             App.Utils.UI.setDateTimePickerValue($startDatetime, startMoment.toDate());
-            App.Utils.UI.setDateTimePickerValue($endDatetime, startMoment.add(duration, 'minutes').toDate());
+            App.Utils.UI.setDateTimePickerValue($endDatetime, startMoment.add((duration + cooldown), 'minutes').toDate());
 
             // Display modal form.
             $appointmentsModal.find('.modal-header h3').text(lang('new_appointment_title'));
@@ -415,6 +416,7 @@ App.Components.AppointmentsModal = (function () {
          * update the start and end time of the appointment.
          */
         $selectService.on('change', () => {
+            console.log("appointments_modal.js::$selectService.change()");
             const serviceId = $selectService.val();
 
             const providerId = $selectProvider.val();
@@ -430,10 +432,12 @@ App.Components.AppointmentsModal = (function () {
                 App.Components.ColorSelection.setColor($appointmentColor, service.color);
             }
 
-            const duration = service ? service.duration : 60;
+            const duration = parseInt(service ? service.duration : 60);
+            const cooldown = parseInt(service ? service.cooldown : 0);
+            const totalDurationMs = (duration + cooldown) * 60000;
 
             const startDateTimeObject = App.Utils.UI.getDateTimePickerValue($startDatetime);
-            const endDateTimeObject = new Date(startDateTimeObject.getTime() + duration * 60000);
+            const endDateTimeObject = new Date(startDateTimeObject.getTime() + totalDurationMs);
             App.Utils.UI.setDateTimePickerValue($endDatetime, endDateTimeObject);
 
             // Update the providers select box.
@@ -671,10 +675,11 @@ App.Components.AppointmentsModal = (function () {
 
         const service = vars('available_services').forEach((service) => Number(service.id) === Number(serviceId));
 
-        const duration = service ? service.duration : 0;
+        const duration = parseInt(service ? service.duration : 60);
+        const cooldown = parseInt(service ? service.cooldown : 0);
 
         const startDatetime = new Date();
-        const endDatetime = moment().add(duration, 'minutes').toDate();
+        const endDatetime = moment().add((duration + cooldown), 'minutes').toDate();
 
         App.Utils.UI.initializeDateTimePicker($startDatetime, {
             onClose: () => {
@@ -686,7 +691,7 @@ App.Components.AppointmentsModal = (function () {
                 );
 
                 const startDateTimeObject = App.Utils.UI.getDateTimePickerValue($startDatetime);
-                const endDateTimeObject = new Date(startDateTimeObject.getTime() + service.duration * 60000);
+                const endDateTimeObject = new Date(startDateTimeObject.getTime() + (service.duration + service.cooldown) * 60000);
                 App.Utils.UI.setDateTimePickerValue($endDatetime, endDateTimeObject);
             },
         });

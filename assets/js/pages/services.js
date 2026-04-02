@@ -19,6 +19,7 @@ App.Pages.Services = (function () {
     const $id = $('#id');
     const $name = $('#name');
     const $duration = $('#duration');
+    const $cooldown = $('#cooldown');
     const $price = $('#price');
     const $currency = $('#currency');
     const $serviceCategoryId = $('#service-category-id');
@@ -105,6 +106,7 @@ App.Pages.Services = (function () {
             // Default values
             $name.val('Service');
             $duration.val('30');
+            $cooldown.val('0');
             $price.val('0');
             $currency.val('');
             $serviceCategoryId.val('');
@@ -134,6 +136,7 @@ App.Pages.Services = (function () {
             const service = {
                 name: $name.val(),
                 duration: $duration.val(),
+                cooldown: $cooldown.val(),
                 price: $price.val(),
                 currency: $currency.val(),
                 description: $description.val(),
@@ -252,6 +255,12 @@ App.Pages.Services = (function () {
                 throw new Error(lang('invalid_duration'));
             }
 
+            // Validate the cooldown.
+            if (Number($cooldown.val()) < vars('event_minimum_cooldown')) {
+                $cooldown.addClass('is-invalid');
+                throw new Error(lang('invalid_cooldown'));
+            }
+
             return true;
         } catch (error) {
             $services.find('.form-message').addClass('alert-danger').text(error.message).show();
@@ -291,6 +300,7 @@ App.Pages.Services = (function () {
         $id.val(service.id);
         $name.val(service.name);
         $duration.val(service.duration);
+        $cooldown.val(service.cooldown);
         $price.val(service.price);
         $currency.val(service.currency);
         $description.val(service.description);
@@ -358,7 +368,13 @@ App.Pages.Services = (function () {
     function getFilterHtml(service) {
         const name = service.name;
 
-        const info = service.duration + ' min - ' + service.price + ' ' + service.currency;
+        let info = service.duration + ' ' + lang('min');
+        if (service.cooldown > 0) {
+            info += ` (+${service.cooldown} ${lang('min')} ${lang('cooldown_lc')})`;
+        }
+        if (service.price > 0) {
+            info += ' - ' + service.price + ' ' + service.currency;
+        }
 
         return $('<div/>', {
             'class': 'service-row entry',

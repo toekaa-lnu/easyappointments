@@ -130,7 +130,9 @@ App.Pages.Calendar = (function () {
             );
 
             if (service) {
-                endMoment.add(service.duration - durationInMinutes, 'minutes');
+            const duration = parseInt(service.duration);
+            const cooldown = parseInt(service.cooldown);
+                endMoment.add((duration + cooldown) - durationInMinutes, 'minutes');
             }
         }
 

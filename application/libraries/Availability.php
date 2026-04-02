@@ -138,9 +138,14 @@ class Availability
 
         $hours = [];
 
+        $duration_value = (int)$service['duration'] + (int)$service['cooldown'];
+        $interval_value = $service['availabilities_type'] == AVAILABILITIES_TYPE_FIXED ? $duration_value : '15';
+        $interval = new DateInterval('PT' . $interval_value . 'M');
+        $duration = new DateInterval('PT' . $duration_value . 'M');
+
         $interval_value = $service['availabilities_type'] == AVAILABILITIES_TYPE_FIXED ? $service['duration'] : '15';
         $interval = new DateInterval('PT' . (int) $interval_value . 'M');
-        $duration = new DateInterval('PT' . (int) $service['duration'] . 'M');
+        $duration = new DateInterval('PT' . (int) $duration_value . 'M');
 
         foreach ($periods as $period) {
             $slot_start = clone $period['start'];
@@ -553,13 +558,14 @@ class Availability
 
             $end_hour = new DateTime($date . ' ' . $period['end']);
 
-            $interval = $service['availabilities_type'] === AVAILABILITIES_TYPE_FIXED ? (int) $service['duration'] : 15;
+            $duration_value = (int)$service['duration'] + (int)$service['cooldown'];
+            $interval = $service['availabilities_type'] === AVAILABILITIES_TYPE_FIXED ? $duration_value : 15;
 
             $current_hour = $start_hour;
 
             $diff = $current_hour->diff($end_hour);
 
-            while ($diff->h * 60 + $diff->i >= (int) $service['duration'] && $diff->invert === 0) {
+            while ($diff->h * 60 + $diff->i >= $duration_value && $diff->invert === 0) {
                 $available_hours[] = $current_hour->format('H:i');
 
                 $current_hour->add(new DateInterval('PT' . $interval . 'M'));

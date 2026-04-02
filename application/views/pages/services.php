@@ -83,6 +83,15 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label" for="cooldown">
+                    <?= lang('cooldown_minutes') ?>
+                    <span class="text-danger" hidden>*</span>
+                </label>
+                <input id="cooldown" class="form-control required" type="number" min="<?= EVENT_MINIMUM_COOLDOWN ?>"
+                       disabled>
+            </div>
+            
+            <div class="mb-3">
                 <label class="form-label" for="price">
                     <?= lang('price') ?>
                     <span class="text-danger" hidden>*</span>

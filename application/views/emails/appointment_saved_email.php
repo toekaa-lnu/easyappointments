@@ -15,6 +15,17 @@
 $max_custom_fields = config('max_custom_fields', 5);
 $max_appt_custom_fields = config('max_appt_custom_fields', 5);
 $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? setting('max_attached_files', 0) : 0;
+
+// Calculate the customer duration by subtracting cooldown from the start-end difference
+$cooldown = $service['cooldown'];
+$start_datetime_object = new DateTime($appointment['start_datetime']);
+$end_datetime_object = new DateTime($appointment['end_datetime']);
+$end_datetime_object->sub(new DateInterval('PT' . $cooldown . 'M'));
+$diff_dateinterval_object = $start_datetime_object->diff($end_datetime_object);
+$customer_duration_minutes = $diff_dateinterval_object->days * 24 * 60;
+$customer_duration_minutes += $diff_dateinterval_object->h * 60;
+$customer_duration_minutes += $diff_dateinterval_object->i;
+$customer_duration_text = sprintf('%s %s', $customer_duration_minutes, lang('minutes'));
 ?>
 
 <html lang="en">
@@ -73,10 +84,10 @@ $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? set
             </tr>
             <tr>
                 <td class="label" style="padding: 3px;font-weight: bold;">
-                    <?= lang('end') ?>
+                    <?= lang('duration') ?>
                 </td>
                 <td style="padding: 3px;">
-                    <?= format_date_time($appointment['end_datetime']) ?>
+                    <?= $customer_duration_text ?>
 
                 </td>
             </tr>

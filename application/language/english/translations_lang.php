@@ -540,4 +540,9 @@ $lang['minutes'] = 'minutes';
 $lang['hours'] = 'hours';
 $lang['days'] = 'days';
 $lang['weekdays'] = 'weekdays';
+$lang['cooldown'] = "Cooldown:";
+$lang['cooldown_lc'] = "cooldown";
+$lang['cooldown_minutes'] = "Cooldown (Minutes)";
+$lang['min'] = "min";
+$lang['invalid_cooldown'] = "Invalid cooldown.";
 // End

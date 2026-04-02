@@ -1060,6 +1060,10 @@ App.Pages.Booking = (function () {
             (availableService) => Number(availableService.id) === Number(serviceId),
         );
 
+        const duration = parseInt(service ? service.duration : 15);
+        const cooldown = parseInt(service ? service.cooldown : 0);
+        const totalDuration = duration + cooldown;
+
         // Add the duration to the start datetime.
         const selectedDate = moment(App.Utils.UI.getDateTimePickerValue($selectDate)).format('YYYY-MM-DD');
 
@@ -1069,8 +1073,8 @@ App.Pages.Booking = (function () {
 
         let endMoment;
 
-        if (service.duration && startMoment) {
-            endMoment = startMoment.clone().add({'minutes': parseInt(service.duration)});
+        if (totalDuration && startMoment) {
+            endMoment = startMoment.clone().add({'minutes': totalDuration});
         } else {
             endMoment = moment();
         }

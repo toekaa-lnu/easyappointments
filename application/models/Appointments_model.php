@@ -673,9 +673,13 @@ class Appointments_model extends EA_Model
      *
      * @throws Exception
      */
-    public function calculate_end_datetime(array $appointment): string
+    public function calculate_end_datetime(array $appointment, bool $add_cooldown = true): string
     {
-        $duration = $this->db->get_where('services', ['id' => $appointment['id_services']])?->row()?->duration;
+        $service = $this->db->get_where('services', ['id' => $appointment['id_services']])?->row();
+        $duration = (int)($service?->duration);
+        if ($add_cooldown) {
+            $duration += (int)($service?->cooldown);
+        }
 
         $end_date_time_object = new DateTime($appointment['start_datetime']);
 

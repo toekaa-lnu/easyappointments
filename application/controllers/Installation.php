@@ -95,6 +95,7 @@ class Installation extends EA_Controller
             $service_id = $this->services_model->save([
                 'name' => 'Service',
                 'duration' => '30',
+                'cooldown' => '0',
                 'price' => '0',
                 'currency' => '',
                 'availabilities_type' => 'flexible',
