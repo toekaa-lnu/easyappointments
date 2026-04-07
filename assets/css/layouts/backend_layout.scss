@@ -951,6 +951,14 @@ body .form-horizontal .controls {
     cursor: pointer;
 }
 
+#business-logic #max-customer-appointments,
+#max-customer-service-bookings {
+    width: 100px;
+}
+#max-customer-appointments-period {
+    width: 200px;
+}
+
 #business-logic #book-advance-timeout,
 #business-logic #future-booking-limit {
     width: 100px;

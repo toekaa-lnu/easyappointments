@@ -973,4 +973,147 @@ class Booking extends EA_Controller
         return $file_finalname;
     }
 
+    /**
+     * Check customer restrictions to make the booking before the registration.
+     */
+    public function check_customer_booking_limits(): void
+    {
+        try {
+            $customer_email = $this->input->get('customer_email');
+            $service_id = $this->input->get('service_id');
+            $booking_date = $this->input->get('booking_date');
+            $hash_booked_service = $this->input->get('appointment_hash');
+
+            // Assume that customer has no appointments, until proven otherwise
+            $existing_appointments = [];
+            $next_service_booking_date = null;
+            $num_service_bookings = 0;
+
+            $target_date = (new DateTime($booking_date))->format('Y-m-d');
+            $customer = [];
+            $customer['email'] = $customer_email;
+            $customer_exists = $this->customers_model->exists($customer);
+
+            if ($customer_exists) {
+                $customer_id = $this->customers_model->find_record_id($customer);
+                $existing_appointments = $this->appointments_model->get_customer_appointments($customer_id);
+
+                $booking_datetime = new DateTimeImmutable($booking_date);
+                $booking_year = $booking_datetime->format('Y');
+                $booking_month = $booking_datetime->format('m');
+                $booking_day = $booking_datetime->format('d');
+                $booking_weekday_id = $booking_datetime->format('N');
+                $start_time = ' 00:00:00';
+                $end_time = ' 23:59:59';
+
+                // Limit the existing appointments to the selected time period
+                $limit_period = setting('max_customer_appointments_period');
+                switch ($limit_period) {
+                    default:
+                    case 'day':
+                        $start_period = $booking_date . $start_time; // start of today
+                        $end_period = $booking_date . $end_time; // end of today
+                        break;
+                    case 'week':
+                        $day_names = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+                        $first_weekday_id = array_search(setting('first_weekday'), $day_names);
+                        $weekday_diff = (($first_weekday_id - $booking_weekday_id + 6) % 7) - 6;
+                        $week_start = $booking_datetime->modify("{$weekday_diff} days");
+                        $week_end = $week_start->modify("+6 days");
+                        $start_period = $week_start->format('Y-m-d') . $start_time;
+                        $end_period = $week_end->format('Y-m-d') . $end_time;
+                        break;
+                    case 'month':
+                        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $booking_month, $booking_year);
+                        $start_period = "{$booking_year}-{$booking_month}-1" . $start_time;
+                        $end_period = "{$booking_year}-{$booking_month}-{$days_in_month}" . $end_time;
+                        break;
+                    case 'half-year':
+                        $start_month = $booking_month <= 6 ? '01' : '07';
+                        $end_month = ($start_month == 1) ? '06' : '12';
+                        $start_period = "{$booking_year}-{$start_month}-1" . $start_time;
+                        $end_period = "{$booking_year}-{$end_month}-31" . $end_time;
+                        break;
+                    case 'calendar_year':
+                        $start_period = "{$booking_year}-01-01" . $start_time;
+                        $end_period = "{$booking_year}-12-31" . $end_time;
+                        break;
+                    case 'school_year':
+                        $start_year = $booking_month <= 6 ? $booking_year - 1 : $booking_year;
+                        $end_year = $start_year + 1;
+                        $start_period = "{$start_year}-07-01" . $start_time;
+                        $end_period = "{$end_year}-06-30" . $end_time;
+                        break;
+                }
+
+                $period_appointments = [];
+                foreach ($existing_appointments as $appointment) {
+                    if ($appointment['start_datetime'] > $start_period && $appointment['end_datetime'] < $end_period) {
+                        $period_appointments[] = $appointment;
+                    }
+                }
+
+                // Find a datetime for another booked appointment for the same service
+                $now = (new DateTime())->format('Y-m-d H:i:s');
+                foreach ($existing_appointments as $appointment) {
+                    if ($appointment['id_services'] == $service_id && $appointment['start_datetime'] > $now) {
+                        $num_service_bookings++;
+                        if ($appointment['id_services'] != $hash_booked_service) {
+                            $next_service_booking_date = $appointment['start_datetime'];
+                        }
+                    }
+                }
+            }
+
+            $num_appointments = count($period_appointments);
+            $max_appointments = setting('max_customer_appointments');
+            $nth_appointment = $hash_booked_service ? $num_appointments : $num_appointments+1;
+
+            $max_service_bookings = setting('max_customer_service_bookings');
+            $nth_service_booking = $hash_booked_service ? $num_service_bookings : $num_service_bookings+1;
+
+            $is_testing_email = in_array($customer_email, explode(';', config('test_email_addresses', '')));
+
+            // Compose the validation message for the bookings confirmation UI
+            $message = '';
+            $cardinals = array('0', lang('one'),lang('two'), lang('three'), lang('four'), lang('five'), '6', '7', '8', '9', '10'); 
+            $ordinals = array('0', lang('first'), lang('second'), lang('third'), lang('fourth'), lang('fifth'), '6.', '7.', '8.', '9.', '10.'); 
+
+            $max_appointments_string = $max_appointments >= count($cardinals) ? strval($max_appointments) : ($max_appointments > 0 ? $cardinals[$max_appointments] : '0');
+            $num_appointments_string = $nth_appointment >= count($ordinals) ? strval($nth_appointment) . '.' : $ordinals[$nth_appointment];
+            $appointments_string = $max_appointments == 1 ? lang('appointment') : lang('appointments');
+            $period_string = lang('each_' . $limit_period);
+            $andLastString = ($max_appointments == $nth_appointment) ? lang('and_last') : '';
+            $appointmentsPolicyString = sprintf(lang('allowed_bookings_policy'), $max_appointments_string, $appointments_string, $period_string, $num_appointments_string, $andLastString);
+
+            $max_appointments_exceeded = ($max_appointments > 0) && ($nth_appointment > $max_appointments);
+            $max_service_bookings_exceeded = ($max_service_bookings > 0) && ($nth_service_booking > $max_service_bookings);
+
+            if ($max_appointments_exceeded) {
+                // Number of allowed appointments exceeded
+                $message =  sprintf(lang('disallowed_booking'), $appointmentsPolicyString);
+            } else if ($max_service_bookings_exceeded) {
+                // Number of upcoming bookings for a service exceeded
+                $max_service_bookings_string = $max_service_bookings >= count($cardinals) ? strval($max_service_bookings) : ($max_service_bookings > 0 ? $cardinals[$max_service_bookings] : '0');
+                $active_bookings_string = $max_service_bookings == 1 ? lang('active_booking') : lang('active_bookings');
+                $num_service_bookings_string = $nth_service_booking >= count($ordinals) ? strval($nth_service_booking) . '.' : $ordinals[$nth_service_booking];
+                $andLastString = ($max_service_bookings == $nth_service_booking) ? lang('and_last') : '';
+                $date = date_create($next_service_booking_date);
+                $activeBookingsPolicyString = sprintf(lang('active_bookings_policy'), $max_service_bookings_string, $active_bookings_string, $num_service_bookings_string, $andLastString, $date->format('Y/m/d'), $date->format('H:i'));
+                $message = sprintf(lang('disallowed_booking'), $activeBookingsPolicyString);
+            } else {
+                // Booking allowed, just show appointments status (or nothing, if unlimited appointments)
+                $message = $max_appointments > 0 ? $appointmentsPolicyString : '';
+            }
+
+            $response = [
+                'allowed' => $is_testing_email || (!$max_appointments_exceeded && !$max_service_bookings_exceeded),
+                'message' => $message,
+            ];
+            json_response($response);
+
+        } catch (Throwable $e) {
+            json_exception($e);
+        }
+    }
 }

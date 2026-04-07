@@ -517,6 +517,7 @@ App.Pages.Booking = (function () {
                     return; // Validation failed, do not continue.
                 } else {
                     App.Pages.Booking.updateConfirmFrame();
+                    App.Pages.Booking.checkCustomerBookingLimits();
                 }
             }
 
@@ -803,6 +804,34 @@ App.Pages.Booking = (function () {
         }
 
         return true;
+    }
+
+    /**
+     * Check customer restrictions for making a booking.
+     *
+     * This method will make an ajax call to the bookings controller that will check
+     * if the customer is restricted from booking the appointment.
+     * This can be eg. max number of bookings or existing active booking of the given service.
+     */
+    function checkCustomerBookingLimits() {
+        var customerEmail = $('#email').val();
+        var serviceId = $('#select-service').val();
+        var bookingDate = moment(App.Utils.UI.getDateTimePickerValue($selectDate)).format('YYYY-MM-DD');
+        var appointmentHash = manageMode ? vars('appointment_data').hash : 0;
+        $('#book-appointment-submit').prop('disabled', true);
+        $('#customer-booking-limits-wait').show();
+        $('#customer-booking-limits-text').hide();
+        App.Http.Booking.checkCustomerBookingLimits(customerEmail, serviceId, bookingDate, appointmentHash, (result) => {
+            $('#book-appointment-submit').prop('disabled', !result.allowed);
+            $('#customer-booking-limits-text').html(result.message);
+            if (result.allowed) {
+                $('#customer-booking-limits-text').removeClass('text-danger');
+            } else {
+                $('#customer-booking-limits-text').addClass('text-danger');
+            }
+            $('#customer-booking-limits-wait').hide();
+            $('#customer-booking-limits-text').show();
+        });
     }
 
     /**
@@ -1264,6 +1293,7 @@ App.Pages.Booking = (function () {
 
     return {
         manageMode,
+        checkCustomerBookingLimits,
         updateConfirmFrame,
         updateServiceDescription,
         validateCustomerForm,

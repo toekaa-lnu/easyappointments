@@ -131,6 +131,49 @@
                             </div>
                         </div>
 
+                        <h5 class="text-black-50 mb-3 fw-light"><?= lang('customer_booking_limits') ?></h5>
+
+                        <div class="mb-5">
+                            <label for="max-customer-appointments" class="form-label">
+                                <?= lang('max_customer_appointments') ?>
+                            </label><br>
+                            <input id="max-customer-appointments" data-field="max_customer_appointments" class="form-control"
+                                   type="number" min="0">
+                            <div class="form-text text-muted">
+                                <small>
+                                    <?= lang('max_customer_appointments_hint') ?>
+                                </small>
+                            </div>
+                            <br/>
+                            <label for="max-customer-service-bookings" class="form-label">
+                                <?= lang('max_customer_service_bookings') ?>
+                            </label><br>
+                            <input id="max-customer-service-bookings" data-field="max_customer_service_bookings" class="form-control"
+                                   type="number" min="0">
+                            <div class="form-text text-muted">
+                                <small>
+                                    <?= lang('max_customer_service_bookings_hint') ?>
+                                </small>
+                            </div>
+                            <br/>
+                            <label for="max-customer-appointments-period" class="form-label">
+                                <?= lang('max_customer_appointments_period') ?>
+                            </label><br>
+                            <select id="max-customer-appointments-period" data-field="max_customer_appointments_period" class="form-select">
+                                <option value="day"><?= lang('day') ?></option>
+                                <option value="week"><?= lang('week') ?></option>
+                                <option value="month"><?= lang('month') ?></option>
+                                <option value="half-year"><?= lang('half-year') ?></option>
+                                <option value="calendar_year"><?= lang('calendar_year') ?></option>
+                                <option value="school_year"><?= lang('school_year') ?></option>
+                            </select>
+                            <div class="form-text text-muted">
+                                <small>
+                                    <?= lang('max_customer_appointments_period_hint') ?>
+                                </small>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-start align-items-center mb-3">
                             <h5 class="text-black-50 mb-0 me-3 fw-light">
                                 <?= lang('appointment_status_options') ?>

@@ -516,6 +516,26 @@ class Appointments_model extends EA_Model
     }
 
     /**
+     * Find appointments (past, present and future) for the given customer id
+     *
+     * @param int $customer_id
+     *
+     * @return array Returns an array of appointments, newest first.
+     */
+    public function get_customer_appointments(int $customer_id): array
+    {
+        $appointments = $this->db
+            ->select('*')
+            ->from('appointments')
+            ->where('id_users_customer', $customer_id)
+            ->order_by('start_datetime', 'DESC')
+            ->get()
+            ->result_array();
+
+        return $appointments;
+    }
+
+    /**
      * Load related resources to an appointment.
      *
      * @param array $appointment Associative array with the appointment data.

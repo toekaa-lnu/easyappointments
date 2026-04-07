@@ -147,6 +147,45 @@ App.Http.Booking = (function () {
     }
 
     /**
+     * Check customer restrictions for making a booking.
+     *
+     * This method will make an ajax call to the bookings controller that will check
+     * if the customer is restricted from booking the appointment.
+     * This can be eg. max number of bookings or existing active booking of the given service.
+     * 
+     * @param {String}   customerEmail     Email address of the booking customer
+     * @param {int}      serviceId         Id of the selected booking service
+     * @param {int}      bookingDate       Start date of the booking
+     * @param {int}      appointmentHast   Hash number of the booking (if editing an existing booking)
+     * @param {function} serviceId         Callback function to call after the check is completed
+     * 
+     * @returns {Object}
+     *      {Boolean} allowed  Whether booking is allowed or not
+     *      {Stringn} message  Customer restrictions message to be shown in the UI
+     */
+    function checkCustomerBookingLimits( customerEmail, serviceId, bookingDate, appointmentHash, callback ) {
+
+        const url = App.Utils.Url.siteUrl('booking/check_customer_booking_limits');
+
+        var data = {
+            customer_email: customerEmail,
+            service_id: serviceId,
+            booking_date: bookingDate,
+            appointment_hash: appointmentHash
+        };
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            data: data,
+            dataType: 'json'
+        })
+            .done(function (response) {
+                callback(response);
+            });
+    }
+
+    /**
      * Register an appointment to the database.
      *
      * This method will make an ajax call to the appointments controller that will register
@@ -396,6 +435,7 @@ App.Http.Booking = (function () {
 
     return {
         registerAppointment,
+        checkCustomerBookingLimits,
         getAvailableHours,
         getUnavailableDates,
         applyPreviousUnavailableDates,

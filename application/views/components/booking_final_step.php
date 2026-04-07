@@ -72,6 +72,11 @@
         <?php slot('after_select_policies'); ?>
     </div>
 
+    <div>
+        <div id="customer-booking-limits-wait"><span class="spinner-border spinner-border-sm"></span> <?= lang('validating_booking') ?></div>
+        <div id="customer-booking-limits-text"></div>
+    </div>
+
     <div class="command-buttons">
         <button type="button" id="button-back-4" class="btn button-back btn-outline-secondary"
                 data-step_index="4">
