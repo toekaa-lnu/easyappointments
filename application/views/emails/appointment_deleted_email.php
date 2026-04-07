@@ -14,6 +14,8 @@ $max_custom_fields = config('max_custom_fields', 5);
 $max_appt_custom_fields = config('max_appt_custom_fields', 5);
 $max_attached_files = intval(setting('attached_files_supported', 0)) === 1 ? setting('max_attached_files', 0) : 0;
 
+$timezone_display_attr = setting('hide_customer_timezone', 0) ? ' style="display:none"' : '';
+
 // Calculate the duration by subtracting cooldown from the start-end difference
 $cooldown = $service['cooldown'];
 $start_datetime_object = new DateTime($appointment['start_datetime']);
@@ -87,7 +89,7 @@ $customer_duration_text = sprintf('%s %s', $customer_duration_minutes, lang('min
 
                 </td>
             </tr>
-            <tr>
+            <tr<?= $timezone_display_attr ?>>
                 <td class="label" style="padding: 3px;font-weight: bold;">
                     <?= lang('timezone') ?>
                 </td>

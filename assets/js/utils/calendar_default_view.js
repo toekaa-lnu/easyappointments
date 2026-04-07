@@ -162,6 +162,7 @@ App.Utils.CalendarDefaultView = (function () {
                 $appointmentsModal.find('#appointment-id').val(appointment.id);
                 $appointmentsModal.find('#select-service').val(appointment.id_services).trigger('change');
                 $appointmentsModal.find('#select-provider').val(appointment.id_users_provider);
+                App.Components.AppointmentsModal.updateTimezone();
 
                 // Set the start and end datetime of the appointment.
                 startMoment = moment(appointment.start_datetime);
@@ -1640,6 +1641,7 @@ App.Utils.CalendarDefaultView = (function () {
             $appointmentsModal.find('#appointment-id').val(appointment.id);
             $appointmentsModal.find('#select-service').val(appointment.id_services).trigger('change');
             $appointmentsModal.find('#select-provider').val(appointment.id_users_provider);
+            App.Components.AppointmentsModal.updateTimezone();
 
             // Set the start and end datetime of the appointment.
             const startDatetimeMoment = moment(appointment.start_datetime);

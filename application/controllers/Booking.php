@@ -269,6 +269,7 @@ class Booking extends EA_Controller
             'customer_token' => $customer_token,
             'default_language' => setting('default_language'),
             'default_timezone' => setting('default_timezone'),
+            'hide_customer_timezone' => setting('hide_customer_timezone', 0),
             'hide_provider_selection' => setting('hide_provider_selection'),
             'ANY_PROVIDER' => ANY_PROVIDER,
         ]);

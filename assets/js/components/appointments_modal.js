@@ -787,6 +787,7 @@ App.Components.AppointmentsModal = (function () {
     return {
         resetModal,
         validateAppointmentForm,
-        initializeAttachedFiles
+        initializeAttachedFiles,
+        updateTimezone
     };
 })();

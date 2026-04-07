@@ -4,6 +4,8 @@
  *
  * @var array $grouped_timezones
  */
+$timezone_display_attr = setting('hide_customer_timezone', 0) ? ' style="display:none"' : '';
+$timezone_value = setting('hide_customer_timezone', 0) ? setting('default_timezone') : 'UTC';
 ?>
 
 <div id="wizard-frame-2" class="wizard-frame" style="display:none;">
@@ -20,12 +22,12 @@
 
             <div class="col-12 col-md-6">
                 <div id="select-time">
-                    <div class="mb-3">
+                    <div class="mb-3" <?= $timezone_display_attr ?>>
                         <label for="select-timezone" class="form-label">
                             <?= lang('timezone') ?>
                         </label>
                         <?php component('timezone_dropdown', [
-                            'attributes' => 'id="select-timezone" class="form-select" value="UTC"',
+                            'attributes' => 'id="select-timezone" class="form-select" value="' . $timezone_value . '"',
                             'grouped_timezones' => $grouped_timezones,
                         ]); ?>
                     </div>
