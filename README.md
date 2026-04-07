@@ -514,3 +514,47 @@ See the [Migration instructions](#migration-instructions) how to handle the migr
 This commit adds a new "Hide Customer Timezone" setting under Admin > Booking Settings. When activated, the customer is no longer able to change (or even see) the timezone selection. Instead, the Default Timezone (as defined under Admin > General Settings is always used).
 
 The timezone is hidden from the date/time selection and confirmation steps in the booking, as well as the email sent out for saved and deleted appointments. Providers are still able to view and change their timezone in the setting, and when accessing bookings via the calendar page.
+
+
+## 7. Customer Booking Limits
+
+SHA of the commit:
+```
+f904c6143e23437ff967204622c1723f773e03ce
+```
+
+SHA of the bug fix commit:
+```
+5f8d51835b0279734f038a00206e6ae2dc976e1e
+```
+
+To open these commits in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/f904c6143e23437ff967204622c1723f773e03ce) for the main commit and [here](https://github.com/alextselegidis/easyappointments/commit/5f8d51835b0279734f038a00206e6ae2dc976e1e) for the bug fix commit.
+
+### 6.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+071_insert_customer_booking_limit_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 6.2 Description of the Changes
+
+This commit adds new "Customer Booking Limit" setting under Admin > Business Logic. The new settings control how many appointments each customer is allowed to book during a configurable time period.
+
+* **Maximum number of appointments** controls the total number of appointments (past, present and future) that a customer is allowed to make during the selected time period. These appointments can be for different services.
+* **Acrive bookings per service** controls how many active (ongoing and future) bookings a customer can have for each service, during the selected time period.
+* **Time period for customer booking limits** controls what time period the above two setting are applied to. You can set it to one of the following:
+  * Day
+  * Week
+  * Month
+  * Half-year (with the periods January..June and July..December)
+  * Calendar year (with the period January..December)
+  * School year (with the period July..June)
+
+The limits are reset at the start of each new time period, so if you choose eg. "Day" as the time period, then the customer is allowed to book the selected number of appointments each day.
+
+In EasyAppointments, a customer is identified by the email address.
