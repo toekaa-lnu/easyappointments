@@ -31,7 +31,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 6. **[Hide Timezone from Customers](#6-hide-timezone-from-customers)**
     1. [Configuration and Migration](#61-configuration-and-migration)
     2. [Description of the Changes](#62-description-of-the-changes)
-7. Customer Booking Limits
+7. **[Customer Booking Limits](#7-customer-booking-limits)**
+    1. [Configuration and Migration](#71-configuration-and-migration)
+    2. [Description of the Changes](#72-description-of-the-changes)
 8. Mark Availability in Calendar View
 9. Appointment Colour by Provider in Calendar View
 10. Providers can see each other's bookings
@@ -530,7 +532,7 @@ SHA of the bug fix commit:
 
 To open these commits in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/f904c6143e23437ff967204622c1723f773e03ce) for the main commit and [here](https://github.com/alextselegidis/easyappointments/commit/5f8d51835b0279734f038a00206e6ae2dc976e1e) for the bug fix commit.
 
-### 6.1. Configuration and Migration
+### 7.1. Configuration and Migration
 
 After merging this commit to your build, you need to migrate the application database to support the new functionality.
 
@@ -541,7 +543,7 @@ This is done with a migration script file added to this commit. This file can be
 
 See the [Migration instructions](#migration-instructions) how to handle the migration.
 
-### 6.2 Description of the Changes
+### 7.2 Description of the Changes
 
 This commit adds new "Customer Booking Limit" setting under Admin > Business Logic. The new settings control how many appointments each customer is allowed to book during a configurable time period.
 
