@@ -28,17 +28,19 @@ Here is a list of changes we have done so far. More detailed instructions will b
 5. **[Cooldown period for services](#5-cooldown-period-for-services)**
     1. [Configuration and Migration](#51-configuration-and-migration)
     2. [Description of the Changes](#52-description-of-the-changes)
-5. Customer Booking Limits
-6. Hide Timezone for Customers
-7. Mark Availability in Calendar View
-8. Appointment Colour by Provider in Calendar View
-9. Providers can see each other's bookings
-10. Custom message on booking service selection page
-11. Adaptive booking UI layout
-12. Extra note for booking when no time is available
-13. Booking service selection page shows services in current language first
-14. Custom link on booking confirmation page
-15. Configurable booking step order
+6. **[Hide Timezone from Customers](#6-hide-timezone-from-customers)**
+    1. [Configuration and Migration](#61-configuration-and-migration)
+    2. [Description of the Changes](#62-description-of-the-changes)
+7. Customer Booking Limits
+8. Mark Availability in Calendar View
+9. Appointment Colour by Provider in Calendar View
+10. Providers can see each other's bookings
+11. Custom message on booking service selection page
+12. Adaptive booking UI layout
+13. Extra note for booking when no time is available
+14. Booking service selection page shows services in current language first
+15. Custom link on booking confirmation page
+16. Configurable booking step order
 
 Please see the [Merge and Migration instructions](#merge-and-migration-instructions) about how to take these changes into use in your own build.
 
@@ -392,7 +394,7 @@ SHA of the bug fix commit:
 841aa8e3b7d5fc1b465805687f5ab81733bf6ba8
 ```
 
-To open these commits in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6827050704896c109612840ef96012e68f82b5b1) for the main commit and [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/841aa8e3b7d5fc1b465805687f5ab81733bf6ba8) for the bug fix commit.
+To open these commits in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/6827050704896c109612840ef96012e68f82b5b1) for the main commit and [here](https://github.com/alextselegidis/easyappointments/commit/841aa8e3b7d5fc1b465805687f5ab81733bf6ba8) for the bug fix commit.
 
 This commit is built on top of some functionality added in **[Support for Attached Files](#2-support-for-attached-files)** (support for subsettings in Booking Settings), so you'll need to add the commit(s) from that change too.
 
@@ -433,7 +435,7 @@ SHA of the bug fix commit:
 4f0b8a74f327bec1e519929d2101adfe6a087e38
 ```
 
-To open these commits in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/6e3bd489863901ee4597d0e2cc236bd0b62ebde3) for the main commit and [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/4f0b8a74f327bec1e519929d2101adfe6a087e38) for the bug fix commit.
+To open these commits in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/6e3bd489863901ee4597d0e2cc236bd0b62ebde3) for the main commit and [here](https://github.com/alextselegidis/easyappointments/commit/4f0b8a74f327bec1e519929d2101adfe6a087e38) for the bug fix commit.
 
 
 ### 4.1. Configuration and Migration
@@ -465,7 +467,7 @@ SHA of the commit:
 89a56da0c98b52824c7574fb9e526c5a444a13c6
 ```
 
-To open this commit in GitHub, click [here](https://gitlab.com/lnu-ub/easyappointments_fork/-/commit/89a56da0c98b52824c7574fb9e526c5a444a13c6).
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/89a56da0c98b52824c7574fb9e526c5a444a13c6).
 
 
 ### 5.1. Configuration and Migration
@@ -484,3 +486,31 @@ See the [Migration instructions](#migration-instructions) how to handle the migr
 This commit adds a new "Cooldown" setting for each service under Admin > Services. This is meant as a period of extra time after the appointment, where the provider can wrap up the meeting (make notes, have a cup of coffee, go to toilet...). The cooldown period is automatically added to the duration of the booking, but not communicated to the customer. Customers are not able to book another appointment during the cooldown period.
 
 For example, when the customer books a service with a 30 minute duration and 15 minute cooldown, the duration communicated to the customer is 30 minutes (in the booking confirmation screen and in the confirmation email), but the appointment occupies a 45-minute slot in the calendar. 
+
+
+## 6. Hide Timezone from Customers
+
+SHA of the commit:
+```
+e602d892d05aa9f321725ec8555afdc85b8ae0c1
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/e602d892d05aa9f321725ec8555afdc85b8ae0c1).
+
+
+### 6.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+070_insert_hide_timezone_row_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 6.2 Description of the Changes
+
+This commit adds a new "Hide Customer Timezone" setting under Admin > Booking Settings. When activated, the customer is no longer able to change (or even see) the timezone selection. Instead, the Default Timezone (as defined under Admin > General Settings is always used).
+
+The timezone is hidden from the date/time selection and confirmation steps in the booking, as well as the email sent out for saved and deleted appointments. Providers are still able to view and change their timezone in the setting, and when accessing bookings via the calendar page.
