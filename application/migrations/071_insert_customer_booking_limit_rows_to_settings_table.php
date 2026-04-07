@@ -46,14 +46,17 @@ class Migration_Insert_customer_booking_limit_rows_to_settings_table extends EA_
      */
     public function down(): void
     {
-        if ($this->db->field_exists('max_customer_appointments', 'settings')) {
-            $this->dbforge->drop_column('settings', 'max_customer_appointments');
+        $field_name = 'max_customer_appointments';
+        if ($this->db->get_where('settings', ['name' => $field_name])->num_rows()) {
+            $this->db->delete('settings', ['name' => $field_name]);
         }
-        if ($this->db->field_exists('max_customer_appointments_period', 'settings')) {
-            $this->dbforge->drop_column('settings', 'max_customer_appointments_period');
+        $field_name = 'max_customer_appointments_period';
+        if ($this->db->get_where('settings', ['name' => $field_name])->num_rows()) {
+            $this->db->delete('settings', ['name' => $field_name]);
         }
-        if ($this->db->field_exists('max_customer_service_bookings', 'settings')) {
-            $this->dbforge->drop_column('settings', 'max_customer_service_bookings');
+        $field_name = 'max_customer_service_bookings';
+        if ($this->db->get_where('settings', ['name' => $field_name])->num_rows()) {
+            $this->db->delete('settings', ['name' => $field_name]);
         }
     }
 }
