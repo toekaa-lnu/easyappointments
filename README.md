@@ -32,6 +32,13 @@ Here is a list of changes we have done so far. More detailed instructions will b
 6. Hide Timezone for Customers
 7. Mark Availability in Calendar View
 8. Appointment Colour by Provider in Calendar View
+9. Providers can see each other's bookings
+10. Custom message on booking service selection page
+11. Adaptive booking UI layout
+12. Extra note for booking when no time is available
+13. Booking service selection page shows services in current language first
+14. Custom link on booking confirmation page
+15. Configurable booking step order
 
 Please see the [Merge and Migration instructions](#merge-and-migration-instructions) about how to take these changes into use in your own build.
 
