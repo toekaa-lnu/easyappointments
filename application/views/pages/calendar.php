@@ -65,6 +65,11 @@
                             </a>
                         </li>
                         <li>
+                            <a class="dropdown-item" href="#" id="insert-availability">
+                                <?= lang('availability') ?>
+                            </a>
+                        </li>
+                        <li>
                             <a class="dropdown-item" href="#"
                                id="insert-working-plan-exception" <?= session('role_slug') !== DB_SLUG_ADMIN
                                    ? 'hidden'
@@ -121,6 +126,11 @@
 ]); ?>
 
 <?php component('unavailabilities_modal', [
+    'timezones' => vars('timezones'),
+    'timezone' => vars('timezone'),
+]); ?>
+
+<?php component('availabilities_modal', [
     'timezones' => vars('timezones'),
     'timezone' => vars('timezone'),
 ]); ?>

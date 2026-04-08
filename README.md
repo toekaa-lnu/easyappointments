@@ -548,7 +548,7 @@ See the [Migration instructions](#migration-instructions) how to handle the migr
 This commit adds new "Customer Booking Limit" setting under Admin > Business Logic. The new settings control how many appointments each customer is allowed to book during a configurable time period.
 
 * **Maximum number of appointments** controls the total number of appointments (past, present and future) that a customer is allowed to make during the selected time period. These appointments can be for different services.
-* **Acrive bookings per service** controls how many active (ongoing and future) bookings a customer can have for each service, during the selected time period.
+* **Active bookings per service** controls how many active (ongoing and future) bookings a customer can have for each service, during the selected time period.
 * **Time period for customer booking limits** controls what time period the above two setting are applied to. You can set it to one of the following:
   * Day
   * Week

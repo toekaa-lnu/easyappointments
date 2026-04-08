@@ -588,4 +588,8 @@ $lang['each_month'] = 'each month';
 $lang['each_half-year'] = 'each half-year';
 $lang['each_calendar_year'] = 'each calendar year';
 $lang['each_school_year'] = 'each school year';
+$lang['availability'] = 'Availability';
+$lang['new_availability_title'] = 'New Availability';
+$lang['edit_availability_title'] = 'Edit Availability';
+$lang['availability_saved'] = 'Availability saved successfully.';
 // End
