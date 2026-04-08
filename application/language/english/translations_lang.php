@@ -592,4 +592,6 @@ $lang['availability'] = 'Availability';
 $lang['new_availability_title'] = 'New Availability';
 $lang['edit_availability_title'] = 'Edit Availability';
 $lang['availability_saved'] = 'Availability saved successfully.';
+$lang['provider_permission_all_bookings'] = 'Providers Can Access All Bookings';
+$lang['provider_permission_all_bookings_hint'] = 'When enabled, providers are able to view and edit each others bookings.';
 // End

@@ -425,6 +425,22 @@ $max_appt_custom_fields = config('max_appt_custom_fields', 5);
 
                                     <div class="mb-3">
                                         <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="provider-permission-all-bookings"
+                                                   data-field="provider_permission_all_bookings">
+                                            <label class="form-check-label" for="provider-permission-all-bookings">
+                                                <?= lang('provider_permission_all_bookings') ?>
+                                            </label>
+                                        </div>
+
+                                        <div class="form-text text-muted">
+                                            <small>
+                                                <?= lang('provider_permission_all_bookings_hint') ?>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="require-captcha"
                                                    data-field="require_captcha">
                                             <label class="form-check-label" for="require-captcha">

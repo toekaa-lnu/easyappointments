@@ -355,7 +355,7 @@ App.Pages.Customers = (function () {
         customer.appointments.forEach((appointment) => {
             if (
                 vars('role_slug') === App.Layouts.Backend.DB_SLUG_PROVIDER &&
-                parseInt(appointment.id_users_provider) !== vars('user_id')
+                (parseInt(appointment.id_users_provider) !== vars('user_id') && !Boolean(Number(vars('provider_permission_all_bookings'))))
             ) {
                 return;
             }

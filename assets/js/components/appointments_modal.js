@@ -445,6 +445,7 @@ App.Components.AppointmentsModal = (function () {
             vars('available_providers').forEach((provider) => {
                 provider.services.forEach((providerServiceId) => {
                     if (
+                        Number(vars('provider_permission_all_bookings')) == 0 &&
                         vars('role_slug') === App.Layouts.Backend.DB_SLUG_PROVIDER &&
                         Number(provider.id) !== vars('user_id')
                     ) {

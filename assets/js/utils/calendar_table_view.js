@@ -463,7 +463,8 @@ App.Utils.CalendarTableView = (function () {
                 (vars('role_slug') === App.Layouts.Backend.DB_SLUG_SECRETARY &&
                     vars('secretary_providers').indexOf(Number(provider.id)) !== -1) ||
                 (vars('role_slug') === App.Layouts.Backend.DB_SLUG_PROVIDER &&
-                    Number(provider.id) === Number(vars('user_id'))),
+                    (Number(provider.id) === Number(vars('user_id')) ||
+                    Number(vars('provider_permission_all_bookings')) !== 0)),
         );
 
         // Create providers and service filters.

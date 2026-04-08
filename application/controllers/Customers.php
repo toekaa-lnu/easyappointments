@@ -113,6 +113,7 @@ class Customers extends EA_Controller
             'secretary_providers' => $secretary_providers,
             'default_language' => setting('default_language'),
             'default_timezone' => setting('default_timezone'),
+            'provider_permission_all_bookings' => setting('provider_permission_all_bookings'),
         ]);
 
         html_vars([

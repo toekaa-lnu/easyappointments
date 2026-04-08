@@ -157,11 +157,13 @@ class Calendar extends EA_Controller
         $available_providers = $this->providers_model->get_available_providers();
 
         if ($role_slug === DB_SLUG_PROVIDER) {
-            $available_providers = array_values(
-                array_filter($available_providers, function ($available_provider) use ($user_id) {
-                    return (int) $available_provider['id'] === (int) $user_id;
-                }),
-            );
+            if (setting('provider_permission_all_bookings') == 0) {
+                $available_providers = array_values(
+                    array_filter($available_providers, function ($available_provider) use ($user_id) {
+                        return (int) $available_provider['id'] === (int) $user_id;
+                    }),
+                );
+            }
         }
 
         if ($role_slug === DB_SLUG_SECRETARY) {
@@ -374,7 +376,11 @@ class Calendar extends EA_Controller
             abort(403);
         }
 
-        if ($role_slug === DB_SLUG_PROVIDER && $user_id !== $provider_id) {
+        if (
+            $role_slug === DB_SLUG_PROVIDER &&
+            $user_id !== $provider_id &&
+            (setting('provider_permission_all_bookings') == 0)
+        ) {
             abort(403);
         }
     }
@@ -635,7 +641,10 @@ class Calendar extends EA_Controller
             // If the current user is a provider he must only see his own appointments.
             if ($role_slug === DB_SLUG_PROVIDER) {
                 foreach ($response['appointments'] as $index => $appointment) {
-                    if ((int) $appointment['id_users_provider'] !== (int) $user_id) {
+                    if (
+                        (int) $appointment['id_users_provider'] !== (int) $user_id &&
+                        (setting('provider_permission_all_bookings') == 0)
+                    ) {
                         unset($response['appointments'][$index]);
                     }
                 }
@@ -643,7 +652,10 @@ class Calendar extends EA_Controller
                 $response['appointments'] = array_values($response['appointments']);
 
                 foreach ($response['unavailabilities'] as $index => $unavailability) {
-                    if ((int) $unavailability['id_users_provider'] !== (int) $user_id) {
+                    if (
+                        (int) $unavailability['id_users_provider'] !== (int) $user_id &&
+                        (setting('provider_permission_all_bookings') == 0)
+                    ) {
                         unset($response['unavailabilities'][$index]);
                     }
                 }
@@ -801,7 +813,10 @@ class Calendar extends EA_Controller
             // If the current user is a provider he must only see his own appointments.
             if ($role_slug === DB_SLUG_PROVIDER) {
                 foreach ($response['appointments'] as $index => $appointment) {
-                    if ((int) $appointment['id_users_provider'] !== (int) $user_id) {
+                    if (
+                        (int) $appointment['id_users_provider'] !== (int) $user_id && 
+                        (setting('provider_permission_all_bookings') == 0)
+                    ) {
                         unset($response['appointments'][$index]);
                     }
                 }
@@ -809,7 +824,10 @@ class Calendar extends EA_Controller
                 $response['appointments'] = array_values($response['appointments']);
 
                 foreach ($response['unavailabilities'] as $index => $unavailability) {
-                    if ((int) $unavailability['id_users_provider'] !== (int) $user_id) {
+                    if (
+                        (int) $appointment['id_users_provider'] !== (int) $user_id && 
+                        (setting('provider_permission_all_bookings') == 0)
+                    ) {
                         unset($response['unavailabilities'][$index]);
                     }
                 }
