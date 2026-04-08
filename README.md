@@ -34,7 +34,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 7. **[Customer Booking Limits](#7-customer-booking-limits)**
     1. [Configuration and Migration](#71-configuration-and-migration)
     2. [Description of the Changes](#72-description-of-the-changes)
-8. Mark Availability in Calendar View
+8. **[Availability Marking in Calendar View](#8-availability-marking-in-calendar-view)**
+    1. [Configuration and Migration](#81-configuration-and-migration)
+    2. [Description of the Changes](#82-description-of-the-changes)
 9. Appointment Colour by Provider in Calendar View
 10. Providers can see each other's bookings
 11. Custom message on booking service selection page
@@ -560,3 +562,23 @@ This commit adds new "Customer Booking Limit" setting under Admin > Business Log
 The limits are reset at the start of each new time period, so if you choose eg. "Day" as the time period, then the customer is allowed to book the selected number of appointments each day.
 
 In EasyAppointments, a customer is identified by the email address.
+
+
+## 8. Availability Marking in Calendar View
+
+SHA of the commit:
+```
+5636bb8c006c6c4fc9066f5237dca1bd7ae3d728
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/5636bb8c006c6c4fc9066f5237dca1bd7ae3d728).
+
+### 8.1. Configuration and Migration
+
+No special configuration and migration needed for this commit.
+
+### 8.2 Description of the Changes
+
+This commit adds the possibility to mark "Availability" in the Admin > Calendar view, in the same way that "Unavailability" or "Appointment" is marked. Just use the mouse to select a timespan and select "Availability" in the popup that appears. A Working Plan Exception is created behind the scenes, with the selected timespan marked as available. It is possible to select multiple timespans and any existing Working Plan Exception is adjusted accordingly, with breaks added between availabilities as needed.
+
+This works best for for providers who want to use a totally closed calendar as a starting point and just add available slots manually.
