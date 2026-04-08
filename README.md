@@ -37,8 +37,10 @@ Here is a list of changes we have done so far. More detailed instructions will b
 8. **[Availability Marking in Calendar View](#8-availability-marking-in-calendar-view)**
     1. [Configuration and Migration](#81-configuration-and-migration)
     2. [Description of the Changes](#82-description-of-the-changes)
-9. Appointment Colour by Provider in Calendar View
-10. Providers can see each other's bookings
+9. **[Providers Can Access All Bookings](#9-providers-can-access-all-bookings)**
+    1. [Configuration and Migration](#91-configuration-and-migration)
+    2. [Description of the Changes](#92-description-of-the-changes)
+10. Appointment Colour by Provider in Calendar View
 11. Custom message on booking service selection page
 12. Adaptive booking UI layout
 13. Extra note for booking when no time is available
@@ -582,3 +584,30 @@ No special configuration and migration needed for this commit.
 This commit adds the possibility to mark "Availability" in the Admin > Calendar view, in the same way that "Unavailability" or "Appointment" is marked. Just use the mouse to select a timespan and select "Availability" in the popup that appears. A Working Plan Exception is created behind the scenes, with the selected timespan marked as available. It is possible to select multiple timespans and any existing Working Plan Exception is adjusted accordingly, with breaks added between availabilities as needed.
 
 This works best for for providers who want to use a totally closed calendar as a starting point and just add available slots manually.
+
+
+## 9. Providers Can Access All Bookings
+
+SHA of the commit:
+```
+6c88a389e3aea93465d20cc9961b6a9fc7156214
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/6c88a389e3aea93465d20cc9961b6a9fc7156214).
+
+### 9.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+072_insert_provider_permission_all_bookings_row_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 9.2 Description of the Changes
+
+This commit adds a new "Providers Can Access All Bookings" setting under Admin > Booking Settings. When this setting is enabled, providers can access (view, edit and delete) also each other's bookings in the calendar view. By default, providers are only able to access their own bookings.
+
+This can be handy eg. in case of sickness, when another provider needs to take over an existing booking.
