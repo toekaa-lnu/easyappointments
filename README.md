@@ -40,7 +40,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 9. **[Providers Can Access All Bookings](#9-providers-can-access-all-bookings)**
     1. [Configuration and Migration](#91-configuration-and-migration)
     2. [Description of the Changes](#92-description-of-the-changes)
-10. Appointment Colour by Provider in Calendar View
+10. **[Provider Colour in Appointments](#10-provider-colour-in-appointments)**
+    1. [Configuration and Migration](#101-configuration-and-migration)
+    2. [Description of the Changes](#102-description-of-the-changes)
 11. Custom message on booking service selection page
 12. Adaptive booking UI layout
 13. Extra note for booking when no time is available
@@ -611,3 +613,30 @@ See the [Migration instructions](#migration-instructions) how to handle the migr
 This commit adds a new "Providers Can Access All Bookings" setting under Admin > Booking Settings. When this setting is enabled, providers can access (view, edit and delete) also each other's bookings in the calendar view. By default, providers are only able to access their own bookings.
 
 This can be handy eg. in case of sickness, when another provider needs to take over an existing booking.
+
+
+## 10. Provider Colour in Appointments
+
+SHA of the commit:
+```
+b703441bcc2a08288d06200e9013e251c7a406aa
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/b703441bcc2a08288d06200e9013e251c7a406aa).
+
+### 10.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+073_add_color_column_to_users_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 10.2 Description of the Changes
+
+This commit adds a new "Color" setting for each provider. Each appointment in the calendar view will then be marked with this colour. The service/appointment colour is still shown as the event background colour, but the provider colour is indicated with a narrow vertical column on the right edge of the appointment.
+
+If the provider colour is set as "#e3e3e3" (the last, light-gray, colour in the selector), then the provider colour is not shown on the appointment.
