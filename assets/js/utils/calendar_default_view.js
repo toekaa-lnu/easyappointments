@@ -822,6 +822,26 @@ App.Utils.CalendarDefaultView = (function () {
     }
 
     /**
+     * Calendar Event "Render" Callback
+     * 
+     * Provider color added to the event
+     * 
+     * @param {Object} info
+     */
+    function onEventDidMount(arg) {
+        const appointment = {...arg.event.extendedProps.data};
+        if (appointment.provider) {
+            const color = appointment.provider.color;
+            if (color != '#e3e3e3') {
+                const elem = arg.el;
+                elem.style['padding-right'] = '2px';
+                elem.style['border-right-width'] = '20px';
+                elem.style['border-right-color'] = color;
+            }
+        }
+    }
+
+    /**
      * Calendar Event "Resize" Callback
      *
      * The user can change the duration of an event by resizing an appointment object on the calendar. This
@@ -1583,6 +1603,7 @@ App.Utils.CalendarDefaultView = (function () {
             dateClick: onDateClick,
             eventClick: onEventClick,
             eventResize: onEventResize,
+            eventDidMount: onEventDidMount,
             eventDrop: onEventDrop,
             select: onSelect,
         });
@@ -1714,6 +1735,7 @@ App.Utils.CalendarDefaultView = (function () {
                 });
             }
 
+            console.log('appointment.color 1')
             App.Components.ColorSelection.setColor($appointmentsModal.find('#appointment-color'), appointment.color);
 
             $appointmentsModal.modal('show');

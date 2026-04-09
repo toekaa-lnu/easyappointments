@@ -39,6 +39,7 @@ class Providers extends EA_Controller
         'id_roles',
         'settings',
         'services',
+        'color',
     ];
 
     public array $optional_provider_fields = [

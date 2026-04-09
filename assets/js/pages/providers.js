@@ -29,6 +29,7 @@ App.Pages.Providers = (function () {
     const $isPrivate = $('#is-private');
     const $notes = $('#notes');
     const $language = $('#language');
+    const $color = $('#color');
     const $timezone = $('#timezone');
     const $ldapDn = $('#ldap-dn');
     const $username = $('#username');
@@ -103,6 +104,7 @@ App.Pages.Providers = (function () {
             const companyWorkingPlan = JSON.parse(vars('company_working_plan'));
             workingPlanManager.setup(companyWorkingPlan);
             workingPlanManager.timepickers(false);
+            App.Components.ColorSelection.enable($color);
         });
 
         /**
@@ -124,6 +126,7 @@ App.Pages.Providers = (function () {
                 .prop('disabled', false);
             $('#providers input:checkbox').prop('disabled', false);
             workingPlanManager.timepickers(false);
+            App.Components.ColorSelection.enable($color);
         });
 
         /**
@@ -177,6 +180,7 @@ App.Pages.Providers = (function () {
                     notifications: Number($notifications.prop('checked')),
                     calendar_view: $calendarView.val(),
                 },
+                color: App.Components.ColorSelection.getColor($color),
             };
 
             // Include provider services.
@@ -364,6 +368,8 @@ App.Pages.Providers = (function () {
         $('#providers .working-plan tbody').empty();
         $('#providers .breaks tbody').empty();
         $('#providers .working-plan-exceptions tbody').empty();
+
+        App.Components.ColorSelection.disable($color);
     }
 
     /**
@@ -391,6 +397,8 @@ App.Pages.Providers = (function () {
         $username.val(provider.settings.username);
         $calendarView.val(provider.settings.calendar_view);
         $notifications.prop('checked', Boolean(Number(provider.settings.notifications)));
+
+        App.Components.ColorSelection.setColor($color, provider.color);
 
         // Add dedicated provider link.
         let dedicatedUrl = App.Utils.Url.siteUrl('?provider=' + encodeURIComponent(provider.id));
