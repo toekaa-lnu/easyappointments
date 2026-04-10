@@ -43,12 +43,13 @@ Here is a list of changes we have done so far. More detailed instructions will b
 10. **[Provider Colour in Appointments](#10-provider-colour-in-appointments)**
     1. [Configuration and Migration](#101-configuration-and-migration)
     2. [Description of the Changes](#102-description-of-the-changes)
-11. Custom message on booking service selection page
-12. Adaptive booking UI layout
-13. Extra note for booking when no time is available
-14. Booking service selection page shows services in current language first
+11. **[Services in Current Language First](#11-services-in-current-language-first)**
+    1. [Configuration and Migration](#111-configuration-and-migration)
+    2. [Description of the Changes](#112-description-of-the-changes)
+12. Custom message on booking service selection page
+14. Extra note for booking when no time is available
 15. Custom link on booking confirmation page
-16. Configurable booking step order
+13. Adaptive booking UI layout
 
 Please see the [Merge and Migration instructions](#merge-and-migration-instructions) about how to take these changes into use in your own build.
 
@@ -640,3 +641,32 @@ See the [Migration instructions](#migration-instructions) how to handle the migr
 This commit adds a new "Color" setting for each provider. Each appointment in the calendar view will then be marked with this colour. The service/appointment colour is still shown as the event background colour, but the provider colour is indicated with a narrow vertical column on the right edge of the appointment.
 
 If the provider colour is set as "#e3e3e3" (the last, light-gray, colour in the selector), then the provider colour is not shown on the appointment.
+
+
+## 11. Services in Current Language First
+
+SHA of the commit:
+```
+7f3c2860e69311f595cc21613e77fd695bf8c59a
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/7f3c2860e69311f595cc21613e77fd695bf8c59a).
+
+### 11.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+074_insert_current_language_services_first_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 11.2 Description of the Changes
+
+This commit improves the service selection in the booking UI so that it is possible to show the services in the current language on top of the list. For example, a customer using the booking UI in English would see the services offered in English first, and then services offered in other languages further down. This will make services relevant to the customer easier to access.
+
+For this to work, you need to setup the service categories so that they match the language names. If you want to use service categories for some other purpose, this solution will not work for you.
+
+This functionality is activated with a setting under Admin > Booking Settings. The setting name is "Services in Current Language Shown First".
