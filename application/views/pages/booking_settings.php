@@ -441,6 +441,22 @@ $max_appt_custom_fields = config('max_appt_custom_fields', 5);
 
                                     <div class="mb-3">
                                         <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="current-language-services-first"
+                                                   data-field="current_language_services_first">
+                                            <label class="form-check-label" for="current-language-services-first">
+                                                <?= lang('current_language_services_first') ?>
+                                            </label>
+                                        </div>
+
+                                        <div class="form-text text-muted">
+                                            <small>
+                                                <?= lang('current_language_services_first_hint') ?>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="require-captcha"
                                                    data-field="require_captcha">
                                             <label class="form-check-label" for="require-captcha">

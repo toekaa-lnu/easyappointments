@@ -34,13 +34,43 @@
                         if ($has_category) {
                             $grouped_services = [];
 
-                            foreach ($available_services as $service) {
-                                if (!empty($service['service_category_id'])) {
-                                    if (!isset($grouped_services[$service['service_category_name']])) {
-                                        $grouped_services[$service['service_category_name']] = [];
+                            if (setting('current_language_services_first', 0) == 1) {
+                                // Add the services from the category matching the current UI language
+                                $language = strtolower(session('language'));
+                                foreach ($available_services as $service) {
+                                    if (!empty($service['service_category_id'])) {
+                                        $category_name = $service['service_category_name'];
+                                        if (strtolower($category_name) == $language) {
+                                            if ( !isset($grouped_services[$category_name])) {
+                                                $grouped_services[$category_name] = [];
+                                            }
+                                            $grouped_services[$category_name][] = $service;
+                                        }
                                     }
+                                }
+                                // Add the services from the other categories
+                                foreach ($available_services as $service) {
+                                    if (!empty($service['service_category_id'])) {
+                                        $category_name = $service['service_category_name'];
+                                        if (strtolower($category_name) != $language) {
+                                            if ( !isset($grouped_services[$category_name]))
+                                            {
+                                                $grouped_services[$category_name] = [];
+                                            }
+                                            $grouped_services[$category_name][] = $service;
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Add all services from all categories
+                                foreach ($available_services as $service) {
+                                    if (!empty($service['service_category_id'])) {
+                                        if (!isset($grouped_services[$service['service_category_name']])) {
+                                            $grouped_services[$service['service_category_name']] = [];
+                                        }
 
-                                    $grouped_services[$service['service_category_name']][] = $service;
+                                        $grouped_services[$service['service_category_name']][] = $service;
+                                    }
                                 }
                             }
 

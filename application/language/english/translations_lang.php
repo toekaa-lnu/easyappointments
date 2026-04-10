@@ -594,4 +594,6 @@ $lang['edit_availability_title'] = 'Edit Availability';
 $lang['availability_saved'] = 'Availability saved successfully.';
 $lang['provider_permission_all_bookings'] = 'Providers Can Access All Bookings';
 $lang['provider_permission_all_bookings_hint'] = 'When enabled, providers are able to view and edit each others bookings.';
+$lang['current_language_services_first'] = 'Services in Current Language Shown First';
+$lang['current_language_services_first_hint'] = 'When enabled, services having a category name which matches the current language are displayed on the top of the service list, in the booking UI where the customer is selecting which service to book.';
 // End
