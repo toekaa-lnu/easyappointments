@@ -21,6 +21,7 @@ App.Http.Booking = (function () {
     const $selectService = $('#select-service');
     const $selectProvider = $('#select-provider');
     const $availableHours = $('#available-hours');
+    const $customMessageTimeUnavailable = $('#custom-message-time-unavailable');
     const $captchaHint = $('#captcha-hint');
     const $captchaTitle = $('.captcha-title');
     const $maxAttachedFiles = $(".attached-file-name-row").length;
@@ -44,6 +45,7 @@ App.Http.Booking = (function () {
      * @param {String} selectedDate The selected date of the available hours we need.
      */
     function getAvailableHours(selectedDate) {
+        console.log('getAvailableHours')
         $availableHours.empty();
 
         // Find the selected service duration (it is going to be send within the "data" object).
@@ -75,6 +77,7 @@ App.Http.Booking = (function () {
 
         $.post(url, data).done((response) => {
             $availableHours.empty();
+            $customMessageTimeUnavailable.empty();
 
             // The response contains the available hours for the selected provider and service. Fill the available
             // hours div with response data.
@@ -142,6 +145,12 @@ App.Http.Booking = (function () {
 
             if (!$availableHours.find('.available-hour').length) {
                 $availableHours.text(lang('no_available_hours'));
+                const customMessageId = vars('custom_message_time_unavailable');
+                if (Boolean(Number(vars('custom_messages_enabled')))
+                    && (customMessageId != undefined)
+                    && (customMessageId != lang(customMessageId))) {
+                    $customMessageTimeUnavailable.text(lang(customMessageId));
+                }
             }
         });
     }
@@ -376,6 +385,12 @@ App.Http.Booking = (function () {
         // If all the days are unavailable then hide the appointments hours.
         if (unavailableDates.length === numberOfDays) {
             $availableHours.text(lang('no_available_hours'));
+                const customMessageId = vars('custom_message_time_unavailable');
+                if (Boolean(Number(vars('custom_messages_enabled')))
+                    && (customMessageId != undefined)
+                    && (customMessageId != lang(customMessageId))) {
+                    $customMessageTimeUnavailable.text(lang(customMessageId));
+                }
         }
 
         // Grey out unavailable dates.

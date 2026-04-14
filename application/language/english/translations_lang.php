@@ -596,4 +596,14 @@ $lang['provider_permission_all_bookings'] = 'Providers Can Access All Bookings';
 $lang['provider_permission_all_bookings_hint'] = 'When enabled, providers are able to view and edit each others bookings.';
 $lang['current_language_services_first'] = 'Services in Current Language Shown First';
 $lang['current_language_services_first_hint'] = 'When enabled, services having a category name which matches the current language are displayed on the top of the service list, in the booking UI where the customer is selecting which service to book.';
+$lang['booking_custom_messages_enabled'] = 'Custom Booking Messages/Links';
+$lang['booking_custom_message_service_page'] = 'Message on Service/Provider Page';
+$lang['booking_custom_message_time_unavailable'] = 'Message on Date/Time Unavailability';
+$lang['booking_custom_message_confirm_link'] = 'Link on Confirmation Page';
+$lang['booking_custom_message_confirm_link_text'] = 'Confirmation Page Link Text';
+$lang['booking_custom_messages_hint'] = 'When enabled, custom messages and links can be added to some predefined places in the booking UI. Use an ID in the language files as the message or link. You can suppress the message in some languages by not defining the ID in those languages.';
+$lang['booking_custom_message_special_teacher'] = 'If you have difficulties to read and write you can get tutoring adapted to your needs. Contact special teacher <a href="mailto:jane@example.org">Jane Doe</a> for more information.';
+$lang['booking_custom_message_no_available_slots'] = "If you can't find any available time slots, we are fully booked and cannot handle additional requests. Sometimes, bookings needs to be made several weeks in advance. New time slots for the coming weeks are being added continuously.";
+$lang['booking_custom_message_easyappointments_link'] = 'https://easyappointments.org/';
+$lang['booking_custom_message_easyappointments_link_text'] = 'Return to the Easy!Appointments Home Page';
 // End

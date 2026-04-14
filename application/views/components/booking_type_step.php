@@ -133,6 +133,15 @@
             </div>
         </div>
     </div>
+    <?php
+        $custom_message = setting('booking_custom_message_service_page', '');
+        $custom_message_hidden = (setting('booking_custom_messages_enabled', 0) == 0)
+            || (lang($custom_message) == '')
+            || (lang($custom_message) == $custom_message);
+    ?>
+    <div id="booking-custom-message-service-page" <?= $custom_message_hidden ? 'hidden' : '' ?> >
+        <?= lang($custom_message) ?>
+    </div>
 
     <div class="command-buttons">
         <span>&nbsp;</span>

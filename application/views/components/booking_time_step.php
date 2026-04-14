@@ -36,6 +36,7 @@ $timezone_value = setting('hide_customer_timezone', 0) ? setting('default_timezo
 
 
                     <div id="available-hours"></div>
+                    <div id="custom-message-time-unavailable"></div>
 
                     <?php slot('after_available_hours'); ?>
                 </div>

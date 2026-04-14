@@ -272,6 +272,8 @@ class Booking extends EA_Controller
             'hide_customer_timezone' => setting('hide_customer_timezone', 0),
             'hide_provider_selection' => setting('hide_provider_selection'),
             'ANY_PROVIDER' => ANY_PROVIDER,
+            'custom_messages_enabled' => setting('booking_custom_messages_enabled', 0),
+            'custom_message_time_unavailable' => setting('booking_custom_message_time_unavailable', ''),
         ]);
 
         html_vars([

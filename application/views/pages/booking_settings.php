@@ -527,6 +527,52 @@ $max_appt_custom_fields = config('max_appt_custom_fields', 5);
 
                                     <div class="mb-3">
                                         <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="booking-custom-messages-enabled"
+                                                data-field="booking_custom_messages_enabled">
+                                            <label class="form-check-label" for="booking-custom-messages-enabled">
+                                                <?= lang('booking_custom_messages_enabled') ?>
+                                            </label>
+                                        </div>
+                                        <div class="subsettings fields-row">
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="booking-custom-message-service-page"
+                                                    data-field="booking_custom_message_service_page">
+                                                <label class="form-check-label col-7" for="booking-custom-message-service-page">
+                                                    <?= lang('booking_custom_message_service_page') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="booking-custom-message-time-unavailable"
+                                                    data-field="booking_custom_message_time_unavailable">
+                                                <label class="form-check-label col-7" for="booking-custom-message-time-unavailable">
+                                                    <?= lang('booking_custom_message_time_unavailable') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="booking-custom-message-confirm-link"
+                                                    data-field="booking_custom_message_confirm_link">
+                                                <label class="form-check-label col-7" for="booking-custom-message-confirm-link">
+                                                    <?= lang('booking_custom_message_confirm_link') ?>
+                                                </label>
+                                            </div>
+                                            <div class="form-group row">
+                                                <input class="form-input form-control form-control-sm col-3" type="text" id="booking-custom-message-confirm-link-text"
+                                                    data-field="booking_custom_message_confirm_link_text">
+                                                <label class="form-check-label col-7" for="booking-custom-message-confirm-link-text">
+                                                    <?= lang('booking_custom_message_confirm_link_text') ?>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-text text-muted">
+                                            <small>
+                                                <?= lang('booking_custom_messages_hint') ?>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
                                             <input class="form-check-input" type="checkbox" id="display-login-button"
                                                    data-field="display_login_button">
                                             <label class="form-check-label" for="display-login-button">

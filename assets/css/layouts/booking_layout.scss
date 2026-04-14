@@ -372,6 +372,12 @@ body {
         border-radius: var(--bs-border-radius);
         padding: 0.6rem 1rem;
     }
+    #book-appointment-wizard #booking-custom-message-service-page {
+        background-color: #fff6ba;
+        padding: 24px;
+        text-align: center;
+        box-shadow: #ddd 0px 0px 8px 1px;
+    }
 }
 
 /* BOOK SUCCESS & MESSAGE
