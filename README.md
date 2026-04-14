@@ -46,9 +46,9 @@ Here is a list of changes we have done so far. More detailed instructions will b
 11. **[Services in Current Language First](#11-services-in-current-language-first)**
     1. [Configuration and Migration](#111-configuration-and-migration)
     2. [Description of the Changes](#112-description-of-the-changes)
-12. Custom message on booking service selection page
-14. Extra note for booking when no time is available
-15. Custom link on booking confirmation page
+12. **[Custom messages during booking](#12-custom-messages-during-booking)**
+    1. [Configuration and Migration](#121-configuration-and-migration)
+    2. [Description of the Changes](#122-description-of-the-changes)
 13. Adaptive booking UI layout
 
 Please see the [Merge and Migration instructions](#merge-and-migration-instructions) about how to take these changes into use in your own build.
@@ -670,3 +670,38 @@ This commit improves the service selection in the booking UI so that it is possi
 For this to work, you need to setup the service categories so that they match the language names. If you want to use service categories for some other purpose, this solution will not work for you.
 
 This functionality is activated with a setting under Admin > Booking Settings. The setting name is "Services in Current Language Shown First".
+
+
+## 12. Services in Current Language First
+
+SHA of the commit:
+```
+07081a67b5a2fba9519d95d6f66af86c03d4fb55
+```
+
+To open this commit in GitHub, click [here](https://github.com/alextselegidis/easyappointments/commit/07081a67b5a2fba9519d95d6f66af86c03d4fb55).
+
+### 12.1. Configuration and Migration
+
+After merging this commit to your build, you need to migrate the application database to support the new functionality.
+
+This is done with a migration script file added to this commit. This file can be found in the `application/migrations` folder:
+```
+075_insert_booking_custom_message_rows_to_settings_table.php
+```
+
+See the [Migration instructions](#migration-instructions) how to handle the migration.
+
+### 12.2 Description of the Changes
+
+This commit adds some custom messages that can be shown to the customer during the booking process. There are two custom messages and a custom link:
+* **Message on Service/Provider Page**  
+This is a message shown on the service/provider selection page (normally the first step of the booking process). It is shown in its own frame with a background colour that makes it stand out from the rest if the page. At Linnaeus University, we use it for informing students with reading/writing difficulties about contacting a special teacher.
+* **Message on Date/Time Unavailability**  
+This is an extra message shown when the current month has no available time slots. At Linnaeus University we use it to inform students that there migt not be any available timeslots att all and encourage them to check back at a later time.
+* **Link on Confirmation Page**  
+This is a custom link that is shown on the confirmation page informing the customer that the booking is successful. It replaces the two buttons that are usually shown on that page ("Go to Booking Page" and "Add to Google Calendar"). At Linnaeus University we use it for directing the student to the Academic Skills Centre homepage.
+* **Confirmation Page Link Text**  
+This is the text displayed for the link "Link on Confirmation Page".
+
+Activation of these messages is controlled with a setting under Admin > Settings > Booking Settings. When the "Custom Booking Messages/Links" setting is deactivated, all custom messages are deactivated. If the setting is activated, each message can be activated individually by entering an ID in the language translation files into the text field. The message is shown only if the ID is defined for the translation file matching the current user language. This way, you can choose to show the messages only in selected languages. If the text field for each setting is left empty, then the message is not shown for any language. Plain text is not supported for these messages, only language translation ID:s.
