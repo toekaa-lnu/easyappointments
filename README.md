@@ -9,15 +9,16 @@ Here is a list of changes we have done so far:
 1. **[Improvements to Custom Fields](#1-improvements-to-custom-fields)**
 2. **[Support for Attached Files](#2-support-for-attached-files)**
 3. **[Hide Provider Selection](#3-hide-provider-selection)**
-4. **[Unit selection for booking advance timeout](#4-unit-selection-for-booking-advance-timeout)**
-5. **[Cooldown period for services](#5-cooldown-period-for-services)**
+4. **[Unit Selection for Booking Advance Timeout](#4-unit-selection-for-booking-advance-timeout)**
+5. **[Cooldown Period for Services](#5-cooldown-period-for-services)**
 6. **[Hide Timezone from Customers](#6-hide-timezone-from-customers)**
 7. **[Customer Booking Limits](#7-customer-booking-limits)**
 8. **[Availability Marking in Calendar View](#8-availability-marking-in-calendar-view)**
 9. **[Providers Can Access All Bookings](#9-providers-can-access-all-bookings)**
 10. **[Provider Colour in Appointments](#10-provider-colour-in-appointments)**
 11. **[Services in Current Language First](#11-services-in-current-language-first)**
-12. **[Custom messages during booking](#12-custom-messages-during-booking)**
+12. **[Custom Messages During Booking](#12-custom-messages-during-booking)**
+13. **[Booking Language with URL Parameter](#13-booking-language-with-url-parameter)**
 
 These changes are implemented on top of EasyAppointments 1.5.2, but can probably be integrated with any version from 1.5 or later. Just follow the *How to Add This to Your Build* section under each topic and it should be fine.
 
@@ -702,6 +703,33 @@ After doing that you can run the following command in the root folder of your bu
 ```bash
 php index.php console migrate
 ```
+
+For more detailed information, see the [General Merge and Migration instructions](#general-merge-and-migration-instructions).
+
+
+## 13. Booking Language with URL Parameter
+
+An URL parameter can now be used for starting up the booking UI in different languages. The parameter key can be either `language` or `lang`. The value is one of the language names (eg. `english` or `swedish`) or the language codes (eg. `en` or `sv`). The mapping of 
+language codes to names is done using a table in `application/config/config.php`.
+
+For example, the following variants can be used for starting the booking UI in English:
+```
+https://demo.easyappointments.org/?language=english
+https://demo.easyappointments.org/?language=en
+https://demo.easyappointments.org/?lang=english
+https://demo.easyappointments.org/?lang=en
+```
+
+### 13.1. How to Add This to Your Build
+
+To merge the commit of this change to your build, use the following command:
+
+```bash
+git cherry-pick c92c7913970e3b23331d85fda9d244b757d9d804
+```
+
+If you want to look at the code changes in this commit, they can be found here:
+* Main commit: [c92c7913970e3b23331d85fda9d244b757d9d804](https://github.com/alextselegidis/easyappointments/commit/c92c7913970e3b23331d85fda9d244b757d9d804)
 
 For more detailed information, see the [General Merge and Migration instructions](#general-merge-and-migration-instructions).
 
