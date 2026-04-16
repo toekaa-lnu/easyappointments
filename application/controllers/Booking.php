@@ -112,6 +112,23 @@ class Booking extends EA_Controller
             return;
         }
 
+        // Handle possible URL parameter for language ('language' or 'lang')
+        $language = $this->input->get('language') ?? $this->input->get('lang');
+        if (isset($language)) {
+            // Values accepted for long and short versions ('en' or 'english')
+            $language = config('language_codes')[$language] ?? $language;
+            if (in_array($language,  config('available_languages'))) {
+                if (session('language') != $language) {
+                    session(['language' => $language]);
+                    config(['language' => $language]);
+                }
+            }
+            // Reload with base_url to remove language parameter from URL
+            // Otherwise it may no longer match after changing via button
+            redirect(base_url(), 'refresh');
+            return;
+        }
+
         $company_name = setting('company_name');
         $company_logo = setting('company_logo');
         $company_color = setting('company_color');
