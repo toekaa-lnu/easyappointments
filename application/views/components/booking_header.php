@@ -4,6 +4,7 @@
  *
  * @var string $company_name
  */
+$hide_provider_selection = (setting('display_any_provider') == 1) && (setting('hide_provider_selection') == 1);
 ?>
 
 <div id="header">
@@ -16,7 +17,7 @@
 
         <div class="d-flex justify-content-center justify-content-md-start">
             <span class="display-booking-selection">
-                <?= lang('service') ?> │ <?= lang('provider') ?>
+                <?= lang('service') ?><?= $hide_provider_selection ? '' : ' | ' . lang('provider') ?>
             </span>
         </div>
     </div>

@@ -4,11 +4,12 @@
  *
  * @var array $available_services
  */
+$hide_provider_selection = (setting('display_any_provider') == 1) && (setting('hide_provider_selection') == 1);
 ?>
 
 <div id="wizard-frame-1" class="wizard-frame" style="visibility: hidden;">
     <div class="frame-container">
-        <h2 class="frame-title mt-md-5"><?= lang('service_and_provider') ?></h2>
+        <h2 class="frame-title mt-md-5"><?= $hide_provider_selection ? lang('select_service') : lang('service_and_provider') ?></h2>
 
         <div class="row frame-content">
             <div class="col col-md-8 offset-md-2">
