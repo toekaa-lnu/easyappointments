@@ -220,7 +220,19 @@
                             </div>
                             
                             <div class="mb-3">
-                                <?php component('color_selection', ['attributes' => 'id="color"']); ?>
+                                <?php
+                                    $provider_colors = [
+                                        "#dddddd",
+                                        "#000000",
+                                        "#bb3333",
+                                        "#33bb33",
+                                        "#3333bb",
+                                        "#bb33bb",
+                                        "#bbbb33",
+                                        "#33bbbb",
+                                    ];
+                                    component('color_selection', ['attributes' => 'id="color"', 'custom_colors' => $provider_colors]);
+                                 ?>
                             </div>
 
                             <div class="mb-3">

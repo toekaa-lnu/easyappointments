@@ -145,7 +145,22 @@
             </div>
 
             <div class="mb-3">
-                <?php component('color_selection', ['attributes' => 'id="color"']); ?>
+            <?php
+                $service_colors = [
+                    "#b2d3ec",
+                    "#d2dcfd",
+                    "#b0e4e9",
+                    "#a8ecd2",
+                    "#c6e6c2",
+                    "#e9e4b8",
+                    "#f5d8b7",
+                    "#f7d7d4",
+                    "#f0baba",
+                    "#f0d9ff",
+                    "#f5f3f3"
+                ];
+                component('color_selection', ['attributes' => 'id="color"', 'custom_colors' => $service_colors]);
+                ?>
             </div>
 
             <div>

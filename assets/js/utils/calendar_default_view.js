@@ -832,10 +832,10 @@ App.Utils.CalendarDefaultView = (function () {
         const appointment = {...arg.event.extendedProps.data};
         if (appointment.provider) {
             const color = appointment.provider.color;
-            if (color != '#e3e3e3') {
+            if (color != '#dddddd') {
                 const elem = arg.el;
                 elem.style['padding-right'] = '2px';
-                elem.style['border-right-width'] = '20px';
+                elem.style['border-right-width'] = '10px';
                 elem.style['border-right-color'] = color;
             }
         }

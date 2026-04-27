@@ -1,7 +1,23 @@
 <?php
 /**
  * @var string $attributes
+ * @var array $custom_colors
  */
+
+$default_colors = [
+    "#7cbae8",
+    "#acbefb",
+    "#82e4ec",
+    "#7cebc1",
+    "#abe9a4",
+    "#ebe07c",
+    "#f3bc7d",
+    "#f3aea6",
+    "#eb8687",
+    "#dfaffe",
+    "#e3e3e3"
+];
+$colors = $custom_colors ?? $default_colors;
 ?>
 
 <?php section('styles'); ?>
@@ -13,49 +29,11 @@
 <label class="form-label"><?= lang('color') ?></label>
 
 <div <?= $attributes ?? '' ?> class="color-selection d-flex justify-content-between mb-4">
-    <button type="button" class="color-selection-option selected" data-value="#7cbae8">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#acbefb">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#82e4ec">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#7cebc1">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#abe9a4">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#ebe07c">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#f3bc7d">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#f3aea6">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#eb8687">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#dfaffe">
-        <i class="fas fa-check"></i>
-    </button>
-
-    <button type="button" class="color-selection-option" data-value="#e3e3e3">
-        <i class="fas fa-check"></i>
-    </button>
+    <?php for ($i = 0; $i < count($colors); $i++): ?>
+        <button type="button" class="color-selection-option selected" data-value="<?= $colors[$i] ?>">
+            <i class="fas fa-check"></i>
+        </button>
+    <?php endfor; ?>
 </div>
 
 <?php section('scripts'); ?>
