@@ -1012,6 +1012,7 @@ class Booking extends EA_Controller
             $customer = [];
             $customer['email'] = $customer_email;
             $customer_exists = $this->customers_model->exists($customer);
+            $period_appointments = [];
 
             if ($customer_exists) {
                 $customer_id = $this->customers_model->find_record_id($customer);
@@ -1065,7 +1066,6 @@ class Booking extends EA_Controller
                         break;
                 }
 
-                $period_appointments = [];
                 foreach ($existing_appointments as $appointment) {
                     if ($appointment['start_datetime'] > $start_period && $appointment['end_datetime'] < $end_period) {
                         $period_appointments[] = $appointment;
