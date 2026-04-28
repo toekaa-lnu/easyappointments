@@ -516,11 +516,13 @@ First of all you need to merge the commits of this change to your build. You can
 ```bash
 git cherry-pick f904c6143e23437ff967204622c1723f773e03ce
 git cherry-pick 5f8d51835b0279734f038a00206e6ae2dc976e1e
+git cherry-pick aabfac31bb6c96dcb2e96db03211c0805a50aab8
 ```
 
 If you want to look at the code changes in these commits, they can be found here:
 * Main commit: [f904c6143e23437ff967204622c1723f773e03ce](https://github.com/alextselegidis/easyappointments/commit/f904c6143e23437ff967204622c1723f773e03ce)
 * Bug fix commit: [5f8d51835b0279734f038a00206e6ae2dc976e1e](https://github.com/alextselegidis/easyappointments/commit/5f8d51835b0279734f038a00206e6ae2dc976e1e)
+* Bug fix commit: [aabfac31bb6c96dcb2e96db03211c0805a50aab8](https://github.com/alextselegidis/easyappointments/commit/aabfac31bb6c96dcb2e96db03211c0805a50aab8)
 
 After merging these commits to your build, you can proceed with the migration. The main commit includes a migration script file (in the `application/migrations/` folder) to make the needed changes to the database tables:
 ```
@@ -609,10 +611,12 @@ First of all you need to merge the commit of this change to your build. You can 
 
 ```bash
 git cherry-pick b703441bcc2a08288d06200e9013e251c7a406aa
+git cherry-pick 8b2a99967e271d070837e4ea367c3a001dd1387c
 ```
 
 If you want to look at the code changes in this commit, they can be found here:
 * Main commit: [b703441bcc2a08288d06200e9013e251c7a406aa](https://github.com/alextselegidis/easyappointments/commit/b703441bcc2a08288d06200e9013e251c7a406aa)
+* Improvement commit: [8b2a99967e271d070837e4ea367c3a001dd1387c](https://github.com/alextselegidis/easyappointments/commit/8b2a99967e271d070837e4ea367c3a001dd1387c)
 
 After merging this commit to your build, you can proceed with the migration. This commit includes a migration script file (in the `application/migrations/` folder) to make the needed changes to the database tables:
 ```
