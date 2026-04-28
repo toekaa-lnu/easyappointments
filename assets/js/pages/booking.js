@@ -549,6 +549,10 @@ App.Pages.Booking = (function () {
         $('.button-back').on('click', (event) => {
             const prevTabIndex = parseInt($(event.currentTarget).attr('data-step_index')) - 1;
 
+            $('.is-invalid').removeClass('is-invalid');
+            $('.text-danger').removeClass('text-danger');
+            $('#wizard-frame-3 #form-message').text('');
+
             $(event.currentTarget)
                 .parents()
                 .eq(1)

@@ -148,6 +148,10 @@
         </div>
     </div>
 
+    <div>
+        <span id="form-message" class="text-danger"></span>
+    </div>
+
     <div class="command-buttons">
         <button type="button" id="button-back-3" class="btn button-back btn-outline-secondary"
                 data-step_index="3">
