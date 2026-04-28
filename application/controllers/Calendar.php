@@ -541,7 +541,7 @@ class Calendar extends EA_Controller
     public function save_working_plan_exception(): void
     {
         try {
-            if (cannot('edit', PRIV_USERS)) {
+            if (cannot('edit', PRIV_APPOINTMENTS)) {
                 throw new RuntimeException('You do not have the required permissions for this task.');
             }
 
@@ -577,7 +577,7 @@ class Calendar extends EA_Controller
     public function delete_working_plan_exception(): void
     {
         try {
-            $required_permissions = can('edit', PRIV_CUSTOMERS);
+            $required_permissions = can('edit', PRIV_APPOINTMENTS);
 
             if (!$required_permissions) {
                 throw new RuntimeException('You do not have the required permissions for this task.');
@@ -821,11 +821,12 @@ class Calendar extends EA_Controller
                     }
                 }
 
+                unset($appointment);
                 $response['appointments'] = array_values($response['appointments']);
 
                 foreach ($response['unavailabilities'] as $index => $unavailability) {
                     if (
-                        (int) $appointment['id_users_provider'] !== (int) $user_id && 
+                        (int) $unavailability['id_users_provider'] !== (int) $user_id && 
                         (setting('provider_permission_all_bookings') == 0)
                     ) {
                         unset($response['unavailabilities'][$index]);
@@ -833,7 +834,6 @@ class Calendar extends EA_Controller
                 }
 
                 unset($unavailability);
-
                 $response['unavailabilities'] = array_values($response['unavailabilities']);
             }
 
