@@ -1013,6 +1013,7 @@ class Booking extends EA_Controller
             $customer['email'] = $customer_email;
             $customer_exists = $this->customers_model->exists($customer);
             $period_appointments = [];
+            $limit_period = setting('max_customer_appointments_period');
 
             if ($customer_exists) {
                 $customer_id = $this->customers_model->find_record_id($customer);
@@ -1027,7 +1028,6 @@ class Booking extends EA_Controller
                 $end_time = ' 23:59:59';
 
                 // Limit the existing appointments to the selected time period
-                $limit_period = setting('max_customer_appointments_period');
                 switch ($limit_period) {
                     default:
                     case 'day':
