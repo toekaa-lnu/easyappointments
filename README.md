@@ -517,12 +517,14 @@ First of all you need to merge the commits of this change to your build. You can
 git cherry-pick f904c6143e23437ff967204622c1723f773e03ce
 git cherry-pick 5f8d51835b0279734f038a00206e6ae2dc976e1e
 git cherry-pick aabfac31bb6c96dcb2e96db03211c0805a50aab8
+git cherry-pick 9b383553ab07a99fc6fa354dda860773bed49057
 ```
 
 If you want to look at the code changes in these commits, they can be found here:
 * Main commit: [f904c6143e23437ff967204622c1723f773e03ce](https://github.com/alextselegidis/easyappointments/commit/f904c6143e23437ff967204622c1723f773e03ce)
 * Bug fix commit: [5f8d51835b0279734f038a00206e6ae2dc976e1e](https://github.com/alextselegidis/easyappointments/commit/5f8d51835b0279734f038a00206e6ae2dc976e1e)
 * Bug fix commit: [aabfac31bb6c96dcb2e96db03211c0805a50aab8](https://github.com/alextselegidis/easyappointments/commit/aabfac31bb6c96dcb2e96db03211c0805a50aab8)
+* Bug fix commit: [9b383553ab07a99fc6fa354dda860773bed49057](https://github.com/alextselegidis/easyappointments/commit/9b383553ab07a99fc6fa354dda860773bed49057)
 
 After merging these commits to your build, you can proceed with the migration. The main commit includes a migration script file (in the `application/migrations/` folder) to make the needed changes to the database tables:
 ```
