@@ -555,10 +555,12 @@ To merge the commit of this change to your build, use the following command:
 
 ```bash
 git cherry-pick 5636bb8c006c6c4fc9066f5237dca1bd7ae3d728
+git cherry-pick 1b611a0780231579f84d87918cb126e745bce4fb
 ```
 
 If you want to look at the code changes in this commit, they can be found here:
 * Main commit: [5636bb8c006c6c4fc9066f5237dca1bd7ae3d728](https://github.com/alextselegidis/easyappointments/commit/5636bb8c006c6c4fc9066f5237dca1bd7ae3d728)
+* Bug fix commit: [1b611a0780231579f84d87918cb126e745bce4fb](https://github.com/alextselegidis/easyappointments/commit/1b611a0780231579f84d87918cb126e745bce4fb)
 
 For more detailed information, see the [General Merge and Migration instructions](#general-merge-and-migration-instructions).
 
