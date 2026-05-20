@@ -357,12 +357,14 @@ First of all you need to merge the commits of this change to your build. You can
 git cherry-pick 6827050704896c109612840ef96012e68f82b5b1
 git cherry-pick 841aa8e3b7d5fc1b465805687f5ab81733bf6ba8
 git cherry-pick f4805c599b1e87c05d1b7bdd986fe39aa9219f2a
+git cherry-pick 57a7a399e4307798ec420cfab3f63e2c5b6d4189
 ```
 
 If you want to look at the code changes in these commits, they can be found here:
 * Main commit: [6827050704896c109612840ef96012e68f82b5b1](https://github.com/alextselegidis/easyappointments/commit/6827050704896c109612840ef96012e68f82b5b1)
 * Bug fix commit: [841aa8e3b7d5fc1b465805687f5ab81733bf6ba8](https://github.com/alextselegidis/easyappointments/commit/841aa8e3b7d5fc1b465805687f5ab81733bf6ba8)
 * Bug fix commit: [f4805c599b1e87c05d1b7bdd986fe39aa9219f2a](https://github.com/alextselegidis/easyappointments/commit/f4805c599b1e87c05d1b7bdd986fe39aa9219f2a)
+* Bug fix commit: [57a7a399e4307798ec420cfab3f63e2c5b6d4189](https://github.com/alextselegidis/easyappointments/commit/57a7a399e4307798ec420cfab3f63e2c5b6d4189)
 
 These commits are built on top of some functionality added in **[Support for Attached Files](#2-support-for-attached-files)** (support for subsettings in *Admin > Settings > Booking Settings*), so you'll need to add the commit(s) from that change too.
 
