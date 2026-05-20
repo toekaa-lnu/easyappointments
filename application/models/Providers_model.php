@@ -681,13 +681,13 @@ class Providers_model extends EA_Model
             ->get()
             ->result_array();
 
-        //foreach ($provider_appt_dists as $provider_appt_dist) {
-        //    log_message('debug', sprintf('provider: %s / distance: %s', $provider_appt_dist['id_users_provider'], $provider_appt_dist['nearest_dist']));
-        //}
+        // foreach ($provider_appt_dists as $provider_appt_dist) {
+        //     log_message('debug', sprintf('provider: %s / distance: %s', $provider_appt_dist['id_users_provider'], $provider_appt_dist['nearest_dist']));
+        // }
 
-        $providers_with_bookings = array_column($provider_appt_dists, 'id_users_provider');
+        $providers_with_bookings = array_map('intval', array_column($provider_appt_dists, 'id_users_provider'));
         //log_message('debug', sprintf('providers with bookings: %s', count($providers_with_bookings)));
-        $providers_without_bookings = array_diff($available_providers, $providers_with_bookings);
+        $providers_without_bookings = array_values(array_diff($available_providers, $providers_with_bookings));
         //log_message('debug', sprintf('providers without bookings: %s', count($providers_without_bookings)));
 
         if (count($providers_without_bookings) > 0) {
