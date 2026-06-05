@@ -37,7 +37,7 @@ $hide_provider_selection = (setting('display_any_provider') == 1) && (setting('h
 
                             if (setting('current_language_services_first', 0) == 1) {
                                 // Add the services from the category matching the current UI language
-                                $language = strtolower(session('language'));
+                                $language = session('language') ? strtolower(session('language')) : config('language');
                                 foreach ($available_services as $service) {
                                     if (!empty($service['service_category_id'])) {
                                         $category_name = $service['service_category_name'];
