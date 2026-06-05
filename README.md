@@ -655,10 +655,12 @@ First of all you need to merge the commit of this change to your build. You can 
 
 ```bash
 git cherry-pick 7f3c2860e69311f595cc21613e77fd695bf8c59a
+git cherry-pick 862220994c97ebccd6fba090495c36802dcf28dd
 ```
 
 If you want to look at the code changes in this commit, they can be found here:
 * Main commit: [7f3c2860e69311f595cc21613e77fd695bf8c59a](https://github.com/alextselegidis/easyappointments/commit/7f3c2860e69311f595cc21613e77fd695bf8c59a)
+* Bug fix commit: [862220994c97ebccd6fba090495c36802dcf28dd](https://github.com/alextselegidis/easyappointments/commit/862220994c97ebccd6fba090495c36802dcf28dd)
 
 After merging this commit to your build, you can proceed with the migration. This commit includes a migration script file (in the `application/migrations/` folder) to make the needed changes to the database tables:
 ```
