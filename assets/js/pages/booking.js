@@ -273,17 +273,15 @@ App.Pages.Booking = (function () {
             }
 
             const selectHiddenAnyProvider = Boolean(Number(vars('display_any_provider'))) && Boolean(Number(vars('hide_provider_selection')));
-
-            if (
-                (selectedServiceId && selectedProviderId) ||
-                (vars('available_services').length === 1 && (vars('available_providers').length === 1 || selectHiddenAnyProvider) )
-            ) {
+            const isSingleService = vars('available_services').length === 1;
+            const isSingleProvider = vars('available_providers').length === 1;
+            if ((selectedServiceId && selectedProviderId) || (isSingleService && (isSingleProvider || selectHiddenAnyProvider))) {
                 if (!selectedServiceId) {
                     $selectService.val(vars('available_services')[0].id).trigger('change');
                 }
 
                 if (!selectedProviderId) {
-                    $selectProvider.val(selectHiddenAnyProvider ? vars('ANY_PROVIDER') : vars('available_providers')[0].id).trigger('change');
+                    $selectProvider.val(isSingleProvider ? vars('available_providers')[0].id : vars('ANY_PROVIDER')).trigger('change');
                 }
 
                 $('.active-step').removeClass('active-step');
