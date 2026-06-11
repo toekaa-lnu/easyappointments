@@ -359,6 +359,7 @@ git cherry-pick 841aa8e3b7d5fc1b465805687f5ab81733bf6ba8
 git cherry-pick f4805c599b1e87c05d1b7bdd986fe39aa9219f2a
 git cherry-pick 57a7a399e4307798ec420cfab3f63e2c5b6d4189
 git cherry-pick fb75bfa73bb65511adfccbd746e85972185bafde
+git cherry-pick 036f11db5f8e635d78fbb1dd98ba7932c0d1e9ba
 ```
 
 If you want to look at the code changes in these commits, they can be found here:
@@ -367,6 +368,7 @@ If you want to look at the code changes in these commits, they can be found here
 * Bug fix commit: [f4805c599b1e87c05d1b7bdd986fe39aa9219f2a](https://github.com/alextselegidis/easyappointments/commit/f4805c599b1e87c05d1b7bdd986fe39aa9219f2a)
 * Bug fix commit: [57a7a399e4307798ec420cfab3f63e2c5b6d4189](https://github.com/alextselegidis/easyappointments/commit/57a7a399e4307798ec420cfab3f63e2c5b6d4189)
 * Bug fix commit: [fb75bfa73bb65511adfccbd746e85972185bafde](https://github.com/alextselegidis/easyappointments/commit/fb75bfa73bb65511adfccbd746e85972185bafde)
+* Bug fix commit: [036f11db5f8e635d78fbb1dd98ba7932c0d1e9ba](https://github.com/alextselegidis/easyappointments/commit/036f11db5f8e635d78fbb1dd98ba7932c0d1e9ba)
 
 These commits are built on top of some functionality added in **[Support for Attached Files](#2-support-for-attached-files)** (support for subsettings in *Admin > Settings > Booking Settings*), so you'll need to add the commit(s) from that change too.
 
