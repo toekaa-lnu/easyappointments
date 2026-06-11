@@ -675,6 +675,7 @@ class Providers_model extends EA_Model
         $provider_appt_dists = $this->db
             ->select("id_users_provider, MIN(ABS(TIMESTAMPDIFF(MINUTE, '$timeString', start_datetime))) AS nearest_dist")
             ->from('appointments')
+            ->where('is_unavailability', false)
             ->where_in('id_users_provider', $available_providers)
             ->group_by('id_users_provider')
             ->order_by('nearest_dist', 'DESC')
